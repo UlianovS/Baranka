@@ -165,12 +165,13 @@
             margin-top: 15px;
             padding: 15px;
             border: 2px solid #28a745; 
-            background-color: #f1f8f1; 
-            color: #28a745; 
+            background-color: #e6f7eb; 
+            color: #1e7e34; /* Основной темно-зеленый текст для всего блока */
             border-radius: 6px;
             font-size: 1.05em;
             line-height: 1.5;
         }
+        /* Жирный текст внутри зеленого блока */
         .result strong {
             font-weight: bold;
             color: #1e7e34; 
@@ -179,42 +180,75 @@
         /* --- БЛОК РЕЗУЛЬТАТОВ: ВАЖНЫЙ (СИНИЙ - для сравнения и лимитов) --- */
         .result-important {
             border-color: #007bff;
-            background-color: #e6f0ff;
-            color: #0056b3;
+            background-color: #e6f0ff; 
+            color: #0056b3; /* Основной темно-синий текст для всего блока */
         }
         .result-important strong {
             color: #004085;
         }
-        .result-important h4 {
-            color: #0056b3;
-            border-bottom: 1px solid #c2e0ff;
-        }
-        .result-important ul li:before {
-            content: "•"; 
-            color: #007bff;
-        }
-
+        
         /* Общие стили для заголовков результатов */
         .result h4 {
             font-size: 1.1em;
-            margin: 0 0 5px 0;
+            margin: 0 0 10px 0; 
             padding-bottom: 5px;
-            border-bottom: 1px solid #d4edda;
-            color: #1e7e34;
+            color: inherit; /* Наследует цвет от родительского блока (.result или .result-important) */
+            border-bottom: 1px solid currentColor; 
+            font-weight: 600; 
         }
+
+        /* Стиль для главного вывода (реальный лимит) */
+        .result p.main-result {
+            font-size: 1.15em;
+            font-weight: 600;
+            margin: 10px 0;
+            color: inherit; /* Наследует цвет от родителя */
+        }
+        
         .result ul {
             list-style-type: none;
             padding-left: 0;
             margin-top: 10px;
         }
-        .result ul li:before {
+        /* Стандартный маркер для списка в зеленом блоке */
+        .result:not(.result-important) ul li:before {
             content: "•"; 
-            color: #28a745;
+            color: #28a745; /* Зеленый маркер */
             font-weight: bold; 
             display: inline-block; 
             width: 1em;
             margin-left: -1em;
         }
+        /* Стандартный маркер для списка в синем блоке */
+        .result-important ul li:before {
+            content: "•"; 
+            color: #007bff; /* Синий маркер */
+            font-weight: bold; 
+            display: inline-block; 
+            width: 1em;
+            margin-left: -1em;
+        }
+        .result ul li {
+            margin-bottom: 5px;
+            color: inherit; /* Убедимся, что цвет текста пункта списка наследуется */
+        }
+
+
+        /* Особый стиль для Инструкторов теперь просто пункт списка */
+        /* Удаляем специфичный цвет и эмодзи, чтобы соответствовать остальным li */
+        /* .result ul li.instructor-count {
+            color: #0056b3; 
+            font-weight: bold;
+            margin-top: 10px; 
+        }
+        .result ul li.instructor-count:before {
+            content: "🧑‍🏫"; 
+            color: #0056b3;
+            font-weight: bold; 
+            display: inline-block; 
+            width: 1em;
+            margin-left: -1em;
+        } */
 
         /* Примечания */
         .note {
@@ -224,6 +258,12 @@
             font-size: 0.85em;
             display: block;
         }
+        .result .note {
+            color: inherit; /* Наследует цвет от родительского блока, чтобы быть зеленым в зеленом блоке */
+            font-size: 0.9em;
+            margin-top: 15px;
+        }
+
         .input-group {
             margin-top: 10px;
             padding: 15px;
@@ -251,30 +291,6 @@
         }
         .nav-link:hover {
             color: #0056b3;
-        }
-        
-        /* Стили для раздела источников */
-        .sources {
-            margin-top: 30px;
-            padding: 20px;
-            border-top: 2px solid #007bff;
-            background-color: #fff;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 800px;
-        }
-        .sources h2 {
-            color: #007bff;
-            border-bottom: 1px solid #c2e0ff;
-            padding-bottom: 10px;
-            margin-top: 0;
-        }
-        .sources ul {
-            padding-left: 20px;
-        }
-        .sources li {
-            margin-bottom: 10px;
-            font-size: 0.95em;
         }
     </style>
 </head>
@@ -461,29 +477,6 @@
             </div>
         </div>
         
-        <div class="sources">
-            <h2><span style="color: #2c3e50;">Источники и Нормативная База</span></h2>
-            <p class="note" style="font-style: normal; color: #2c3e50;">
-                Формулы и константы, используемые в данном калькуляторе, основаны на официальных требованиях и общепринятой методике расчета автошкол.
-            </p>
-            <ul>
-                <li>
-                    **Расчет ТС и Максимальной Мощности (Практика):**
-                    <p class="note">Формула <code style="color: #007bff;">Nт.с. = (Т * К) / (t * 24.5 * 12) + 1</code> (где t=7,2 часа) используется для расчета транспортных средств.
-                    Она базируется на **Методических рекомендациях** по разработке и реализации примерных программ профессионального обучения водителей ТС (ПРИКАЗ №1408 от 2013 г.), а также на локальных актах автошкол. Константа 7,2 часа является стандартной продолжительностью рабочей смены инструктора (при одном инструкторе на ТС).</p>
-                </li>
-                <li>
-                    **Лимит группы по площади (СанПиН):**
-                    <p class="note">Норма площади **2.5 кв.м на одного обучающегося** основана на требованиях санитарно-эпидемиологических правил и нормативов, например, **СанПиН 2.4.3648-20** (или аналогичных, действующих на момент расчета), регулирующих условия обучения. <br>
-                    <a href="https://docs.cntd.ru/document/566113886" target="_blank">[Ссылка на СанПиН 2.4.3648-20 (п. 3.4.16)]</a>.</p>
-                </li>
-                <li>
-                    **Расчет Максимальной Мощности (Теория):**
-                    <p class="note">Формула для расчета групп и кабинетов основана на определении годового фонда рабочего времени помещений и группы, с учетом **коэффициента загрузки 0.75** (75%) для учета перерывов и технического обслуживания помещений.</p>
-                </li>
-            </ul>
-        </div>
-
     </div>
     
     <script>
@@ -551,7 +544,6 @@
             const Sgr_target = parseFloat(document.getElementById('Sgr_target').value);
             const T_total_target = parseFloat(document.getElementById('T_total_target').value);
             const Pgr_target = parseFloat(document.getElementById('Pgr_target').value);
-            // ИСПОЛЬЗУЕМ НОВУЮ ФУНКЦИЮ
             const t_ts_target = getDailyWorkHours('instructors_target');
             const hours_per_day_target = parseFloat(document.getElementById('hours_per_day_target').value);
 
@@ -577,7 +569,13 @@
             const Required_Working_TS = Math.ceil(Required_Working_TS_raw);
             const Final_Required_TS = Required_Working_TS + 1; // + 1 резерв
             
-            // 5. Формирование результата с чистым HTML
+            // 5. Необходимое количество Инструкторов
+            const Instructor_Working_Hours_Per_Year = STANDARD_SHIFT_HOURS * ANNUAL_MULTIPLIER; // 7.2 * 294
+            const Total_Instructor_Hours = T_total_target * K_target;
+            const Required_Instructors_raw = Total_Instructor_Hours / Instructor_Working_Hours_Per_Year;
+            const Required_Instructors_min = Math.ceil(Required_Instructors_raw);
+
+            // 6. Формирование результата с чистым HTML
             document.getElementById('result_reverse').innerHTML = 
                 `<h4>ДЛЯ ${K_target} ОБУЧАЮЩИХСЯ В ГОД ВАМ НЕОБХОДИМО:</h4>
                  
@@ -587,17 +585,18 @@
                     <li>Минимально необходимое количество учебных кабинетов: <strong>${Required_Classrooms_min}</strong> (при загрузке ${hours_per_day_target} ч/день).</li>
                  </ul>
                  
-                 <strong>2. ПРАКТИКА (Автопарк):</strong>
+                 <strong>2. ПРАКТИКА (Автопарк и Персонал):</strong>
                  <ul>
                     <li>Минимально необходимое количество рабочих ТС: <strong>${Required_Working_TS}</strong> ед.</li>
                     <li>Общее количество ТС (включая 1 резервное, при работе ${t_ts_target.toFixed(1)} ч/день): <strong>${Final_Required_TS}</strong> ед. 
-                        <span class="nav-link" onclick="scrollToElement('calc_vehicle_total')">→ Проверить расчет ТС по формуле</span>
+                        <span class="nav-link" onclick="scrollToElement('calc_vehicle_total')" style="color:#007bff; text-decoration: underline;">→ Проверить расчет ТС по формуле</span>
                     </li>
+                    <li class="instructor-count-style">Общее количество инструкторов: <strong>${Required_Instructors_min}</strong> чел.</li>
                  </ul>
-                 <span class="note"> Расчет ТС произведен по часам вождения, указанным в плане (${T_total_target} ч).</span>
+                 <span class="note">Расчет ТС произведен по часам вождения, указанным в плане (${T_total_target} ч).</span>
                  `;
             
-            // ИСПРАВЛЕНИЕ БАГА: Обновляем высоту аккордеона после вывода результатов
+            // Обновляем высоту аккордеона после вывода результатов
             const accordionContent = document.getElementById('calc_reverse').closest('.accordion-content');
             if (accordionContent) {
                 accordionContent.style.maxHeight = accordionContent.scrollHeight + 40 + 'px';
@@ -616,7 +615,7 @@
             const maxGroupSize = Math.floor(Area / SANPIN_NORM);
 
             document.getElementById('result_sanpin').innerHTML = 
-                `Максимально допустимый размер группы по СанПиН: <strong>${maxGroupSize}</strong> человек.`;
+                `<p class="main-result">Максимально допустимый размер группы по СанПиН: <strong>${maxGroupSize}</strong> человек.</p>`;
                  
             document.getElementById('Sgr_final').setAttribute('max', maxGroupSize);
             document.getElementById('Sgr_final').setAttribute('title', `Не более ${maxGroupSize} чел. по СанПиН`);
@@ -629,7 +628,6 @@
 
             // 1. Практическая мощность
             const Ntc = parseFloat(document.getElementById('Ntc_final').value);
-            // ИСПОЛЬЗУЕМ НОВУЮ ФУНКЦИЮ
             const t = getDailyWorkHours('instructors_final');
             const T = parseFloat(document.getElementById('T_final').value);
             
@@ -666,7 +664,7 @@
             let sanitation_note = "";
             
             if (Sgr_Planned > SanPin_Limit) {
-                 sanitation_note = `<span style="color:#dc3545; font-weight: bold;">⚠️ ВАЖНО: Планируемый размер группы (${Sgr_Planned} чел.) превышает лимит по СанПиН (${SanPin_Limit} чел.). Расчет теоретической мощности ведется по лимиту СанПиН.</span><br>`;
+                 sanitation_note = `<span style="color:#dc3545; font-weight: bold;">⚠️ ВАЖНО: Планируемый размер группы (${Sgr_Planned} чел.) превышает лимит по СанПиН (${SanPin_Limit} чел.). Расчет теоретической мощности ведется по лимиту СанПиН.</span><br><br>`;
             }
             
             if (K_Practical < K_Theoretical) {
@@ -686,9 +684,8 @@
                     <li>Максимальная ТЕОРЕТИЧЕСКАЯ мощность (по классам): <strong>${K_Theoretical}</strong> чел. (Факт. группа: ${Sgr_Actual} чел.)</li>
                  </ul>
                  
-                 <strong>РЕАЛЬНАЯ МАКСИМАЛЬНАЯ ПРОПУСКНАЯ СПОСОБНОСТЬ В ГОД: <strong>${K_FinalLimit}</strong> человек.</strong><br>
-                 <br>
-                 ${bottleneck_message}`;
+                 <p class="main-result">РЕАЛЬНАЯ МАКСИМАЛЬНАЯ ПРОПУСКНАЯ СПОСОБНОСТЬ В ГОД: <strong>${K_FinalLimit}</strong> человек.</p>
+                 <p style="margin-top: 15px;">${bottleneck_message}</p>`;
         }
         
         // --- 4. Калькулятор: Максимальная ТЕОРЕТИЧЕСКАЯ мощность (групп) ---
@@ -707,7 +704,7 @@
             const resultValue = (CLASSROOM_LOAD_FACTOR * Fpom * Pi) / Pgr;
 
             document.getElementById('result_groups').innerHTML = 
-                `Максимальное количество учебных групп в год (по кабинетам): <strong>${Math.floor(resultValue)}</strong> групп.`;
+                `<p class="main-result">Максимальное количество учебных групп в год (по кабинетам): <strong>${Math.floor(resultValue)}</strong> групп.</p>`;
         }
 
         // --- 5. Калькулятор: Общее число учебных кабинетов (потребность) ---
@@ -727,13 +724,12 @@
             const resultValue = (Pgr * n) / denominator;
             
             document.getElementById('result_classrooms').innerHTML = 
-                `Для теоретического обучения требуется: <strong>${Math.ceil(resultValue)}</strong> учебных кабинетов.`;
+                `<p class="main-result">Для теоретического обучения требуется: <strong>${Math.ceil(resultValue)}</strong> учебных кабинетов.</p>`;
         }
 
         // --- 6. Калькулятор: Максимальная ПРАКТИЧЕСКАЯ мощность ---
         function calculateStudents() {
             const Ntc = parseFloat(document.getElementById('Ntc_students').value);
-            // ИСПОЛЬЗУЕМ НОВУЮ ФУНКЦИЮ
             const t = getDailyWorkHours('instructors_students');
             const T = parseFloat(document.getElementById('T_students').value);
             
@@ -746,14 +742,13 @@
             const resultValue = (working_vehicles * t * ANNUAL_MULTIPLIER) / T;
             
             document.getElementById('result_students').innerHTML = 
-                `Максимальное количество обучающихся в год (по автопарку, при ${t.toFixed(1)} ч/день): <strong>${Math.floor(resultValue)}</strong> человек.`;
+                `<p class="main-result">Максимальное количество обучающихся в год (по автопарку, при ${t.toFixed(1)} ч/день): <strong>${Math.floor(resultValue)}</strong> человек.</p>`;
         }
         
         // --- 7. Калькулятор: Общее количество необходимых ТС ---
         function calculateVehicleTotal() {
             const T = parseFloat(document.getElementById('T_total').value);
             const K = parseFloat(document.getElementById('K_total').value);
-            // ИСПОЛЬЗУЕМ НОВУЮ ФУНКЦИЮ
             const t = getDailyWorkHours('instructors_total');
             const denominator = t * ANNUAL_MULTIPLIER;
 
