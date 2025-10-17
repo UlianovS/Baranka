@@ -77,7 +77,7 @@
         
         .accordion-item.active .accordion-content {
             padding: 20px;
-            max-height: 4000px; /* ИСПРАВЛЕНО: Увеличен max-height для полного отображения результатов */
+            max-height: 4000px; 
         }
         .accordion-icon {
             font-size: 1.2em;
@@ -95,7 +95,6 @@
             border-left: 4px solid #007bff;
             padding-left: 15px;
             background-color: #ffffff;
-            /* Для навигации */
             scroll-margin-top: 80px; 
         }
         .calculator:not(:last-child) {
@@ -127,7 +126,7 @@
             color: #495057;
             font-size: 0.95em;
         }
-        input[type="number"] {
+        input[type="number"], select {
             width: calc(100% - 20px);
             padding: 10px;
             margin-top: 4px;
@@ -253,6 +252,30 @@
         .nav-link:hover {
             color: #0056b3;
         }
+        
+        /* Стили для раздела источников */
+        .sources {
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 2px solid #007bff;
+            background-color: #fff;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 800px;
+        }
+        .sources h2 {
+            color: #007bff;
+            border-bottom: 1px solid #c2e0ff;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .sources ul {
+            padding-left: 20px;
+        }
+        .sources li {
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
     </style>
 </head>
 <body>
@@ -287,8 +310,16 @@
                         <input type="number" id="Pgr_target" value="138">
                         <label for="T_total_target">Количество часов вождения по учебному плану (Т):</label>
                         <input type="number" id="T_total_target" value="56">
-                        <label for="t_ts_target">Время работы одного ТС в день (час):</label>
-                        <input type="number" id="t_ts_target" value="7.2">
+                        
+                        <label for="instructors_target">Сколько инструкторов на одной машине?</label>
+                        <select id="instructors_target" onchange="updateNote('note_target', this.value)">
+                            <option value="1">1 Инструктор (1 смена)</option>
+                            <option value="2" selected>2 Инструктора (2 смены)</option>
+                        </select>
+                        <span class="note" id="note_target">
+                            **Пояснение:** При 2 инструкторах, расчетное время работы ТС в день - 14.4 часа (2 * 7.2 часа).
+                        </span>
+                        
                         <label for="hours_per_day_target">Использование класса (Кол-во часов в день):</label>
                         <input type="number" id="hours_per_day_target" value="8">
                     </div>
@@ -325,8 +356,16 @@
                         <h4>Параметры практики:</h4>
                         <label for="Ntc_final">Общее количество учебных ТС по факту (включая резервное ТС):</label>
                         <input type="number" id="Ntc_final" value="5">
-                        <label for="t_final">Время работы одного ТС в день (час):</label>
-                        <input type="number" id="t_final" value="7.2">
+                        
+                        <label for="instructors_final">Сколько инструкторов на одной машине?</label>
+                        <select id="instructors_final" onchange="updateNote('note_final', this.value)">
+                            <option value="1">1 Инструктор (1 смена)</option>
+                            <option value="2" selected>2 Инструктора (2 смены)</option>
+                        </select>
+                        <span class="note" id="note_final">
+                            **Пояснение:** При 2 инструкторах, расчетное время работы ТС в день - 14.4 часа (2 * 7.2 часа).
+                        </span>
+                        
                         <label for="T_final">Общее количество часов вождения по учебному плану (Т):</label>
                         <input type="number" id="T_final" value="56">
                     </div>
@@ -382,8 +421,16 @@
                     <span class="note">Сколько студентов может "пропустить" ваш автопарк.</span>
                     <label for="Ntc_students">Общее количество учебных транспортных средств по факту (включая 1 резервное ТС):</label>
                     <input type="number" id="Ntc_students" value="5">
-                    <label for="t_students">Время работы одного учебного ТС в день, час:</label>
-                    <input type="number" id="t_students" value="7.2">
+                    
+                    <label for="instructors_students">Сколько инструкторов на одной машине?</label>
+                    <select id="instructors_students" onchange="updateNote('note_students', this.value)">
+                        <option value="1">1 Инструктор (1 смена)</option>
+                        <option value="2" selected>2 Инструктора (2 смены)</option>
+                    </select>
+                    <span class="note" id="note_students">
+                        **Пояснение:** При 2 инструкторах, расчетное время работы ТС в день - 14.4 часа (2 * 7.2 часа).
+                    </span>
+                    
                     <label for="T_students">Общее количество часов вождения по учебному плану:</label>
                     <input type="number" id="T_students" value="56">
                     <button onclick="calculateStudents()">Рассчитать Максимальное Количество Студентов</button>
@@ -397,13 +444,44 @@
                     <input type="number" id="T_total" value="56">
                     <label for="K_total">Планируемое общее количество обучающихся (К) в год:</label>
                     <input type="number" id="K_total" value="190">
-                    <label for="t_total">Время работы одного учебного ТС в день, час:</label>
-                    <input type="number" id="t_total" value="7.2">
+                    
+                    <label for="instructors_total">Сколько инструкторов на одной машине?</label>
+                    <select id="instructors_total" onchange="updateNote('note_total', this.value)">
+                        <option value="1">1 Инструктор (1 смена)</option>
+                        <option value="2" selected>2 Инструктора (2 смены)</option>
+                    </select>
+                    <span class="note" id="note_total">
+                        **Пояснение:** При 2 инструкторах, расчетное время работы ТС в день - 14.4 часа (2 * 7.2 часа).
+                    </span>
+                    
                     <button onclick="calculateVehicleTotal()">Рассчитать Общее Количество ТС</button>
                     <div class="result" id="result_vehicle_total"></div>
                 </div>
 
             </div>
+        </div>
+        
+        <div class="sources">
+            <h2><span style="color: #2c3e50;">Источники и Нормативная База</span></h2>
+            <p class="note" style="font-style: normal; color: #2c3e50;">
+                Формулы и константы, используемые в данном калькуляторе, основаны на официальных требованиях и общепринятой методике расчета автошкол.
+            </p>
+            <ul>
+                <li>
+                    **Расчет ТС и Максимальной Мощности (Практика):**
+                    <p class="note">Формула <code style="color: #007bff;">Nт.с. = (Т * К) / (t * 24.5 * 12) + 1</code> (где t=7,2 часа) используется для расчета транспортных средств.
+                    Она базируется на **Методических рекомендациях** по разработке и реализации примерных программ профессионального обучения водителей ТС (ПРИКАЗ №1408 от 2013 г.), а также на локальных актах автошкол. Константа 7,2 часа является стандартной продолжительностью рабочей смены инструктора (при одном инструкторе на ТС).</p>
+                </li>
+                <li>
+                    **Лимит группы по площади (СанПиН):**
+                    <p class="note">Норма площади **2.5 кв.м на одного обучающегося** основана на требованиях санитарно-эпидемиологических правил и нормативов, например, **СанПиН 2.4.3648-20** (или аналогичных, действующих на момент расчета), регулирующих условия обучения. <br>
+                    <a href="https://docs.cntd.ru/document/566113886" target="_blank">[Ссылка на СанПиН 2.4.3648-20 (п. 3.4.16)]</a>.</p>
+                </li>
+                <li>
+                    **Расчет Максимальной Мощности (Теория):**
+                    <p class="note">Формула для расчета групп и кабинетов основана на определении годового фонда рабочего времени помещений и группы, с учетом **коэффициента загрузки 0.75** (75%) для учета перерывов и технического обслуживания помещений.</p>
+                </li>
+            </ul>
         </div>
 
     </div>
@@ -415,7 +493,23 @@
         const ANNUAL_MULTIPLIER = DAYS_PER_MONTH * MONTHS_PER_YEAR; // 294
         const CLASSROOM_LOAD_FACTOR = 0.75; // Коэффициент загрузки 75%
         const SANPIN_NORM = 2.5; // 2.5 кв.м на 1 ученика
+        const STANDARD_SHIFT_HOURS = 7.2; // 7.2 часа в смену
 
+        // --- Функция для определения времени работы ТС (НОВЫЙ ХЕЛПЕР) ---
+        function getDailyWorkHours(instructor_id) {
+            const instructors = parseInt(document.getElementById(instructor_id).value);
+            return instructors * STANDARD_SHIFT_HOURS;
+        }
+
+        // --- Функция для обновления пояснения (НОВЫЙ ХЕЛПЕР) ---
+        function updateNote(note_id, instructors_value) {
+            const hours = parseInt(instructors_value) * STANDARD_SHIFT_HOURS;
+            const noteElement = document.getElementById(note_id);
+            if (noteElement) {
+                noteElement.innerHTML = `**Пояснение:** При ${instructors_value} инструкторах, расчетное время работы ТС в день - ${hours.toFixed(1)} часа (${instructors_value} * 7.2 часа).`;
+            }
+        }
+        
         // --- Функция для Аккордеона ---
         function toggleAccordion(header) {
             const item = header.parentNode;
@@ -431,7 +525,6 @@
                 });
                 
                 item.classList.add('active');
-                // Устанавливаем высоту с запасом
                 content.style.maxHeight = content.scrollHeight + 40 + 'px'; 
             }
         }
@@ -458,7 +551,8 @@
             const Sgr_target = parseFloat(document.getElementById('Sgr_target').value);
             const T_total_target = parseFloat(document.getElementById('T_total_target').value);
             const Pgr_target = parseFloat(document.getElementById('Pgr_target').value);
-            const t_ts_target = parseFloat(document.getElementById('t_ts_target').value);
+            // ИСПОЛЬЗУЕМ НОВУЮ ФУНКЦИЮ
+            const t_ts_target = getDailyWorkHours('instructors_target');
             const hours_per_day_target = parseFloat(document.getElementById('hours_per_day_target').value);
 
             if (K_target <= 0 || Sgr_target <= 0 || Pgr_target <= 0 || t_ts_target <= 0 || hours_per_day_target <= 0 || T_total_target <= 0) {
@@ -496,7 +590,7 @@
                  <strong>2. ПРАКТИКА (Автопарк):</strong>
                  <ul>
                     <li>Минимально необходимое количество рабочих ТС: <strong>${Required_Working_TS}</strong> ед.</li>
-                    <li>Общее количество ТС (включая 1 резервное): <strong>${Final_Required_TS}</strong> ед. 
+                    <li>Общее количество ТС (включая 1 резервное, при работе ${t_ts_target.toFixed(1)} ч/день): <strong>${Final_Required_TS}</strong> ед. 
                         <span class="nav-link" onclick="scrollToElement('calc_vehicle_total')">→ Проверить расчет ТС по формуле</span>
                     </li>
                  </ul>
@@ -535,11 +629,12 @@
 
             // 1. Практическая мощность
             const Ntc = parseFloat(document.getElementById('Ntc_final').value);
-            const t = parseFloat(document.getElementById('t_final').value);
+            // ИСПОЛЬЗУЕМ НОВУЮ ФУНКЦИЮ
+            const t = getDailyWorkHours('instructors_final');
             const T = parseFloat(document.getElementById('T_final').value);
             
             if (T <= 0 || Ntc < 1 || t <= 0) {
-                 document.getElementById('result_final_limit').innerHTML = "Ошибка: Проверьте параметры Т, Количество ТС (>=1) и Время работы ТС (>0) для практики.";
+                 document.getElementById('result_final_limit').innerHTML = "Ошибка: Проверьте параметры Т, Количество ТС (>=1) и Инструкторов (>0) для практики.";
                  return;
             }
             
@@ -587,7 +682,7 @@
                 `<h4>РЕЗУЛЬТАТЫ СРАВНЕНИЯ:</h4>
                  ${sanitation_note}
                  <ul>
-                    <li>Максимальная ПРАКТИЧЕСКАЯ мощность (по ТС): <strong>${K_Practical}</strong> чел.</li>
+                    <li>Максимальная ПРАКТИЧЕСКАЯ мощность (по ТС, при ${t.toFixed(1)} ч/день): <strong>${K_Practical}</strong> чел.</li>
                     <li>Максимальная ТЕОРЕТИЧЕСКАЯ мощность (по классам): <strong>${K_Theoretical}</strong> чел. (Факт. группа: ${Sgr_Actual} чел.)</li>
                  </ul>
                  
@@ -638,11 +733,12 @@
         // --- 6. Калькулятор: Максимальная ПРАКТИЧЕСКАЯ мощность ---
         function calculateStudents() {
             const Ntc = parseFloat(document.getElementById('Ntc_students').value);
-            const t = parseFloat(document.getElementById('t_students').value);
+            // ИСПОЛЬЗУЕМ НОВУЮ ФУНКЦИЮ
+            const t = getDailyWorkHours('instructors_students');
             const T = parseFloat(document.getElementById('T_students').value);
             
             if (T <= 0 || Ntc < 1 || t <= 0) {
-                document.getElementById('result_students').innerHTML = "Ошибка: Проверьте значения Т, Количество ТС (>=1) и Время работы ТС (>0).";
+                document.getElementById('result_students').innerHTML = "Ошибка: Проверьте значения Т, Количество ТС (>=1) и Инструкторов (>0).";
                 return;
             }
 
@@ -650,14 +746,15 @@
             const resultValue = (working_vehicles * t * ANNUAL_MULTIPLIER) / T;
             
             document.getElementById('result_students').innerHTML = 
-                `Максимальное количество обучающихся в год (по автопарку): <strong>${Math.floor(resultValue)}</strong> человек.`;
+                `Максимальное количество обучающихся в год (по автопарку, при ${t.toFixed(1)} ч/день): <strong>${Math.floor(resultValue)}</strong> человек.`;
         }
         
         // --- 7. Калькулятор: Общее количество необходимых ТС ---
         function calculateVehicleTotal() {
             const T = parseFloat(document.getElementById('T_total').value);
             const K = parseFloat(document.getElementById('K_total').value);
-            const t = parseFloat(document.getElementById('t_total').value);
+            // ИСПОЛЬЗУЕМ НОВУЮ ФУНКЦИЮ
+            const t = getDailyWorkHours('instructors_total');
             const denominator = t * ANNUAL_MULTIPLIER;
 
             if (denominator <= 0 || T <= 0 || K <= 0) {
@@ -670,12 +767,18 @@
             
             document.getElementById('result_vehicle_total').innerHTML = 
                 `Необходимое количество *рабочих* ТС: <strong>${Math.ceil(resultValue)}</strong> ед. ( ${Math.round(resultValue * 100) / 100} расчетное).<br>
-                 Общее количество необходимых транспортных средств: <strong>${finalResult}</strong> (с учетом 1 резервного ТС).`;
+                 Общее количество необходимых транспортных средств (с учетом 1 резервного ТС, при ${t.toFixed(1)} ч/день): <strong>${finalResult}</strong>.`;
         }
 
         // Инициализация
         window.onload = function() {
             calculateSanPinLimit();
+            
+            // Инициализация пояснений для всех селектов
+            updateNote('note_target', document.getElementById('instructors_target').value);
+            updateNote('note_final', document.getElementById('instructors_final').value);
+            updateNote('note_students', document.getElementById('instructors_students').value);
+            updateNote('note_total', document.getElementById('instructors_total').value);
             
             // Инициализация высоты для первого (активного) аккордеона
             const firstContent = document.querySelector('.accordion-item.active .accordion-content');
