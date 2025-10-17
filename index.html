@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Автошкола: Расчет Мощности и Ресурсов</title>
+    <title>Автошкола: Расчет квот</title>
     <style>
         /* --- Общие стили и Макет --- */
         body { 
@@ -296,24 +296,24 @@
 </head>
 <body>
 
-    <h1>Автошкола: Расчет Мощности и Ресурсов</h1>
-    <span class="note header-note">Расчеты для Категории «В» с учетом требований СанПиН.</span>
+    <h1>Автошкола: Расчет квот</h1>
+    <span class="note header-note">Расчеты для категории «В» с учетом требований СанПиН и ГИБДД.</span>
 
     <div class="container">
         
         <div class="accordion-item active">
             <div class="accordion-header" onclick="toggleAccordion(this)">
-                <span>1. Планирование: Расчет необходимых ресурсов для желаемого потока</span>
+                <span>1. Расчет необходимых ресурсов для желаемого кол-ва квот</span>
                 <span class="accordion-icon">></span>
             </div>
             <div class="accordion-content">
                 <div class="calculator" id="calc_reverse">
-                    <h3 class="h3-reverse">Калькулятор 1. Целевое планирование</h3>
+                    <h3 class="h3-reverse">Основной калькулятор. Целевое планирование</h3>
                     <span class="note">Введите желаемое количество обучающихся в год и параметры работы, чтобы определить минимально необходимые ресурсы.</span>
 
                     <div class="input-group">
                         <h4>Целевые параметры:</h4>
-                        <label for="K_target">Желаемое количество обучающихся (К) в год:</label>
+                        <label for="K_target">Желаемое количество обучающихся в год:</label>
                         <input type="number" id="K_target" value="300">
                         <label for="Sgr_target">Планируемый средний размер учебной группы:</label>
                         <input type="number" id="Sgr_target" value="30">
@@ -324,7 +324,7 @@
                         <h4>Параметры курса и работы:</h4>
                         <label for="Pgr_target">Продолжительность теоретического курса на группу (час):</label>
                         <input type="number" id="Pgr_target" value="138">
-                        <label for="T_total_target">Количество часов вождения по учебному плану (Т):</label>
+                        <label for="T_total_target">Количество часов вождения по учебному плану:</label>
                         <input type="number" id="T_total_target" value="56">
                         
                         <label for="instructors_target">Сколько инструкторов на одной машине?</label>
@@ -340,7 +340,7 @@
                         <input type="number" id="hours_per_day_target" value="8">
                     </div>
 
-                    <button onclick="calculateReverse()" class="btn-reverse">Рассчитать Необходимые Ресурсы</button>
+                    <button onclick="calculateReverse()" class="btn-reverse">Рассчитать</button>
                     <div class="result" id="result_reverse"></div>
                 </div>
             </div>
@@ -348,7 +348,7 @@
 
         <div class="accordion-item">
             <div class="accordion-header" onclick="toggleAccordion(this)">
-                <span>2. Анализ Мощности: Прямой расчет пропускной способности и ресурсов</span>
+                <span>2. Расчет пропускной способности и ресурсов</span>
                 <span class="accordion-icon">></span>
             </div>
             <div class="accordion-content">
@@ -356,17 +356,17 @@
                 <div class="calculator" id="calc_sanpin">
                     <h3 class="h3-important">Расчет 2.1. Ограничение по СанПиН (Размер группы)</h3>
                     <span class="note">Определяет верхний лимит размера группы исходя из площади кабинета (2.5 кв.м на человека).</span>
-                    <label for="Area_sanpin">Площадь самого большого учебного кабинета (кв.м):</label>
+                    <label for="Area_sanpin">Площадь учебного кабинета (кв.м):</label>
                     <input type="number" id="Area_sanpin" value="75">
                     <label for="Area_norm">Норма площади на 1 ученика (кв.м):</label>
                     <input type="number" id="Area_norm" value="2.5" readonly>
-                    <button onclick="calculateSanPinLimit()">Рассчитать Максимальный Размер Группы</button>
+                    <button onclick="calculateSanPinLimit()">Рассчитать максимальный размер группы</button>
                     <div class="result result-important" id="result_sanpin"></div>
                 </div>
                 
                 <div class="calculator" id="calc_final_limit">
-                    <h3 class="h3-important">Расчет 2.2. Реальная Максимальная Пропускная Способность (Лимит)</h3>
-                    <span class="note">Сравнивает мощность автопарка и классов, чтобы определить ваш фактический годовой лимит студентов.</span>
+                    <h3 class="h3-important">Расчет 2.2. Реальная максимальная пропускная способность (Лимиты)</h3>
+                    <span class="note">Сравнивает мощность автопарка и классов, чтобы определить ваш фактический годовой лимит квот</span>
 
                     <div class="input-group">
                         <h4>Параметры практики:</h4>
@@ -407,7 +407,7 @@
                 </div>
                 
                 <div class="calculator" id="calc_groups">
-                    <h3>Расчет 2.3. Максимальная Теоретическая Мощность (Групп)</h3>
+                    <h3>Расчет 2.3. Максимальное кол-во групп</h3>
                     <span class="note">Показывает, сколько групп может "пропустить" ваш учебный кабинет.</span>
                     <label for="hours_per_day_groups">Использование класса (Кол-во часов в день):</label>
                     <input type="number" id="hours_per_day_groups" value="4">
@@ -415,7 +415,7 @@
                     <input type="number" id="Pi_groups" value="1">
                     <label for="Pgr_groups">Продолжительность теоретического курса на одну группу (в часах):</label>
                     <input type="number" id="Pgr_groups" value="138">
-                    <button onclick="calculateGroups()">Рассчитать Количество Групп</button>
+                    <button onclick="calculateGroups()">Рассчитать кол-во групп</button>
                     <div class="result" id="result_groups"></div>
                 </div>
 
@@ -428,12 +428,12 @@
                     <input type="number" id="n_rooms" value="6">
                     <label for="hours_per_day_rooms">Использование класса (Кол-во часов в день):</label>
                     <input type="number" id="hours_per_day_rooms" value="4">
-                    <button onclick="calculateClassrooms()">Рассчитать Количество Кабинетов</button>
+                    <button onclick="calculateClassrooms()">Рассчитать кол-во кабинетов</button>
                     <div class="result" id="result_classrooms"></div>
                 </div>
 
                 <div class="calculator" id="calc_students">
-                    <h3>Расчет 2.5. Максимальная Практическая Мощность (по ТС)</h3>
+                    <h3>Расчет 2.5. Кол-во квот по кол-ву автомобилей</h3>
                     <span class="note">Сколько студентов может "пропустить" ваш автопарк.</span>
                     <label for="Ntc_students">Общее количество учебных транспортных средств по факту (включая 1 резервное ТС):</label>
                     <input type="number" id="Ntc_students" value="5">
@@ -449,16 +449,16 @@
                     
                     <label for="T_students">Общее количество часов вождения по учебному плану:</label>
                     <input type="number" id="T_students" value="56">
-                    <button onclick="calculateStudents()">Рассчитать Максимальное Количество Студентов</button>
+                    <button onclick="calculateStudents()">Рассчитать максимальное кол-во курсантов</button>
                     <div class="result" id="result_students"></div>
                 </div>
                 
                 <div class="calculator" id="calc_vehicle_total">
-                    <h3>Расчет 2.6. Необходимое Общее Количество ТС</h3>
+                    <h3>Расчет 2.6. Необходимое общее кол-во автомобилей</h3>
                     <span class="note">Расчет общего количества ТС, включая 1 резервное учебное ТС.</span>
-                    <label for="T_total">Общее количество часов вождения (Т) по учебному плану:</label>
+                    <label for="T_total">Общее количество часов вождения по учебному плану:</label>
                     <input type="number" id="T_total" value="56">
-                    <label for="K_total">Планируемое общее количество обучающихся (К) в год:</label>
+                    <label for="K_total">Планируемое общее количество обучающихся в год:</label>
                     <input type="number" id="K_total" value="190">
                     
                     <label for="instructors_total">Сколько инструкторов на одной машине?</label>
@@ -470,7 +470,7 @@
                         **Пояснение:** При 2 инструкторах, расчетное время работы ТС в день - 14.4 часа (2 * 7.2 часа).
                     </span>
                     
-                    <button onclick="calculateVehicleTotal()">Рассчитать Общее Количество ТС</button>
+                    <button onclick="calculateVehicleTotal()">Рассчитать общее кол-во авто</button>
                     <div class="result" id="result_vehicle_total"></div>
                 </div>
 
