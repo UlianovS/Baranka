@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Автошкола: Расчет Мощности и Ресурсов</title>
+    <title>Автошкола: Расчет квот</title>
     <style>
         /* --- Общие стили и Макет --- */
         body { 
@@ -296,24 +296,24 @@
 </head>
 <body>
 
-    <h1>Автошкола: Расчет Мощности и Ресурсов</h1>
-    <span class="note header-note">Расчеты для Категории «В» с учетом требований СанПиН.</span>
+    <h1>Автошкола: Расчет квот</h1>
+    <span class="note header-note">Расчеты для категории «В» с учетом требований СанПиН и ГИБДД.</span>
 
     <div class="container">
         
         <div class="accordion-item active">
             <div class="accordion-header" onclick="toggleAccordion(this)">
-                <span>1. Планирование: Расчет необходимых ресурсов для желаемого потока</span>
+                <span>1. Расчет необходимых ресурсов для желаемого кол-ва квот</span>
                 <span class="accordion-icon">></span>
             </div>
             <div class="accordion-content">
                 <div class="calculator" id="calc_reverse">
-                    <h3 class="h3-reverse">Калькулятор 1. Целевое планирование</h3>
+                    <h3 class="h3-reverse">Основной калькулятор. Целевое планирование</h3>
                     <span class="note">Введите желаемое количество обучающихся в год и параметры работы, чтобы определить минимально необходимые ресурсы.</span>
 
                     <div class="input-group">
                         <h4>Целевые параметры:</h4>
-                        <label for="K_target">Желаемое количество обучающихся (К) в год:</label>
+                        <label for="K_target">Желаемое количество обучающихся в год:</label>
                         <input type="number" id="K_target" value="300">
                         <label for="Sgr_target">Планируемый средний размер учебной группы:</label>
                         <input type="number" id="Sgr_target" value="30">
@@ -324,7 +324,7 @@
                         <h4>Параметры курса и работы:</h4>
                         <label for="Pgr_target">Продолжительность теоретического курса на группу (час):</label>
                         <input type="number" id="Pgr_target" value="138">
-                        <label for="T_total_target">Количество часов вождения по учебному плану (Т):</label>
+                        <label for="T_total_target">Количество часов вождения по учебному плану:</label>
                         <input type="number" id="T_total_target" value="56">
                         
                         <label for="instructors_target">Сколько инструкторов на одной машине?</label>
@@ -340,7 +340,7 @@
                         <input type="number" id="hours_per_day_target" value="8">
                     </div>
 
-                    <button onclick="calculateReverse()" class="btn-reverse">Рассчитать Необходимые Ресурсы</button>
+                    <button onclick="calculateReverse()" class="btn-reverse">Рассчитать</button>
                     <div class="result" id="result_reverse"></div>
                 </div>
             </div>
@@ -348,7 +348,7 @@
 
         <div class="accordion-item">
             <div class="accordion-header" onclick="toggleAccordion(this)">
-                <span>2. Анализ Мощности: Прямой расчет пропускной способности и ресурсов</span>
+                <span>2. Расчет пропускной способности и ресурсов</span>
                 <span class="accordion-icon">></span>
             </div>
             <div class="accordion-content">
@@ -356,17 +356,17 @@
                 <div class="calculator" id="calc_sanpin">
                     <h3 class="h3-important">Расчет 2.1. Ограничение по СанПиН (Размер группы)</h3>
                     <span class="note">Определяет верхний лимит размера группы исходя из площади кабинета (2.5 кв.м на человека).</span>
-                    <label for="Area_sanpin">Площадь самого большого учебного кабинета (кв.м):</label>
+                    <label for="Area_sanpin">Площадь учебного кабинета (кв.м):</label>
                     <input type="number" id="Area_sanpin" value="75">
                     <label for="Area_norm">Норма площади на 1 ученика (кв.м):</label>
                     <input type="number" id="Area_norm" value="2.5" readonly>
-                    <button onclick="calculateSanPinLimit()">Рассчитать Максимальный Размер Группы</button>
+                    <button onclick="calculateSanPinLimit()">Рассчитать максимальный размер группы</button>
                     <div class="result result-important" id="result_sanpin"></div>
                 </div>
                 
                 <div class="calculator" id="calc_final_limit">
-                    <h3 class="h3-important">Расчет 2.2. Реальная Максимальная Пропускная Способность (Лимит)</h3>
-                    <span class="note">Сравнивает мощность автопарка и классов, чтобы определить ваш фактический годовой лимит студентов.</span>
+                    <h3 class="h3-important">Расчет 2.2. Реальная максимальная пропускная способность (Лимиты)</h3>
+                    <span class="note">Сравнивает мощность автопарка и классов, чтобы определить ваш фактический годовой лимит квот</span>
 
                     <div class="input-group">
                         <h4>Параметры практики:</h4>
@@ -407,7 +407,7 @@
                 </div>
                 
                 <div class="calculator" id="calc_groups">
-                    <h3>Расчет 2.3. Максимальная Теоретическая Мощность (Групп)</h3>
+                    <h3>Расчет 2.3. Максимальное кол-во групп</h3>
                     <span class="note">Показывает, сколько групп может "пропустить" ваш учебный кабинет.</span>
                     <label for="hours_per_day_groups">Использование класса (Кол-во часов в день):</label>
                     <input type="number" id="hours_per_day_groups" value="4">
@@ -415,7 +415,7 @@
                     <input type="number" id="Pi_groups" value="1">
                     <label for="Pgr_groups">Продолжительность теоретического курса на одну группу (в часах):</label>
                     <input type="number" id="Pgr_groups" value="138">
-                    <button onclick="calculateGroups()">Рассчитать Количество Групп</button>
+                    <button onclick="calculateGroups()">Рассчитать кол-во групп</button>
                     <div class="result" id="result_groups"></div>
                 </div>
 
@@ -428,12 +428,12 @@
                     <input type="number" id="n_rooms" value="6">
                     <label for="hours_per_day_rooms">Использование класса (Кол-во часов в день):</label>
                     <input type="number" id="hours_per_day_rooms" value="4">
-                    <button onclick="calculateClassrooms()">Рассчитать Количество Кабинетов</button>
+                    <button onclick="calculateClassrooms()">Рассчитать кол-во кабинетов</button>
                     <div class="result" id="result_classrooms"></div>
                 </div>
 
                 <div class="calculator" id="calc_students">
-                    <h3>Расчет 2.5. Максимальная Практическая Мощность (по ТС)</h3>
+                    <h3>Расчет 2.5. Кол-во квот по кол-ву автомобилей</h3>
                     <span class="note">Сколько студентов может "пропустить" ваш автопарк.</span>
                     <label for="Ntc_students">Общее количество учебных транспортных средств по факту (включая 1 резервное ТС):</label>
                     <input type="number" id="Ntc_students" value="5">
@@ -449,16 +449,16 @@
                     
                     <label for="T_students">Общее количество часов вождения по учебному плану:</label>
                     <input type="number" id="T_students" value="56">
-                    <button onclick="calculateStudents()">Рассчитать Максимальное Количество Студентов</button>
+                    <button onclick="calculateStudents()">Рассчитать максимальное кол-во курсантов</button>
                     <div class="result" id="result_students"></div>
                 </div>
                 
                 <div class="calculator" id="calc_vehicle_total">
-                    <h3>Расчет 2.6. Необходимое Общее Количество ТС</h3>
+                    <h3>Расчет 2.6. Необходимое общее кол-во автомобилей</h3>
                     <span class="note">Расчет общего количества ТС, включая 1 резервное учебное ТС.</span>
-                    <label for="T_total">Общее количество часов вождения (Т) по учебному плану:</label>
+                    <label for="T_total">Общее количество часов вождения по учебному плану:</label>
                     <input type="number" id="T_total" value="56">
-                    <label for="K_total">Планируемое общее количество обучающихся (К) в год:</label>
+                    <label for="K_total">Планируемое общее количество обучающихся в год:</label>
                     <input type="number" id="K_total" value="190">
                     
                     <label for="instructors_total">Сколько инструкторов на одной машине?</label>
@@ -470,7 +470,7 @@
                         **Пояснение:** При 2 инструкторах, расчетное время работы ТС в день - 14.4 часа (2 * 7.2 часа).
                     </span>
                     
-                    <button onclick="calculateVehicleTotal()">Рассчитать Общее Количество ТС</button>
+                    <button onclick="calculateVehicleTotal()">Рассчитать общее кол-во авто</button>
                     <div class="result" id="result_vehicle_total"></div>
                 </div>
 
@@ -619,6 +619,12 @@
                  
             document.getElementById('Sgr_final').setAttribute('max', maxGroupSize);
             document.getElementById('Sgr_final').setAttribute('title', `Не более ${maxGroupSize} чел. по СанПиН`);
+
+            // ИСПРАВЛЕНИЕ: Обновляем высоту аккордеона после вывода результатов
+            const accordionContent = document.getElementById('calc_sanpin').closest('.accordion-content');
+            if (accordionContent) {
+                accordionContent.style.maxHeight = accordionContent.scrollHeight + 40 + 'px';
+            }
         }
         
         // --- 3. Калькулятор: РЕАЛЬНАЯ МАКСИМАЛЬНАЯ ПРОПУСКНАЯ СПОСОБНОСТЬ ---
@@ -686,102 +692,134 @@
                  
                  <p class="main-result">РЕАЛЬНАЯ МАКСИМАЛЬНАЯ ПРОПУСКНАЯ СПОСОБНОСТЬ В ГОД: <strong>${K_FinalLimit}</strong> человек.</p>
                  <p style="margin-top: 15px;">${bottleneck_message}</p>`;
+
+            // ИСПРАВЛЕНИЕ: Обновляем высоту аккордеона после вывода результатов
+            const accordionContent = document.getElementById('calc_final_limit').closest('.accordion-content');
+            if (accordionContent) {
+                accordionContent.style.maxHeight = accordionContent.scrollHeight + 40 + 'px';
+            }
         }
         
-        // --- 4. Калькулятор: Максимальная ТЕОРЕТИЧЕСКАЯ мощность (групп) ---
+        // --- 4. Калькулятор: Максимальная ТЕОРЕТИЧЕСКАЯ мощность (групп)
         function calculateGroups() {
             const hours_per_day = parseFloat(document.getElementById('hours_per_day_groups').value);
             const Pi = parseFloat(document.getElementById('Pi_groups').value);
             const Pgr = parseFloat(document.getElementById('Pgr_groups').value);
-            
-            const Fpom = hours_per_day * ANNUAL_MULTIPLIER; 
 
-            if (Pgr <= 0 || Fpom <= 0 || Pi <= 0) {
-                document.getElementById('result_groups').innerHTML = "Ошибка: Проверьте параметры (должны быть > 0).";
+            if (Pgr <= 0 || hours_per_day <= 0 || Pi <= 0) {
+                document.getElementById('result_groups').innerHTML = "Ошибка: Все параметры должны быть больше нуля.";
                 return;
             }
 
-            const resultValue = (CLASSROOM_LOAD_FACTOR * Fpom * Pi) / Pgr;
+            const Fpom = hours_per_day * ANNUAL_MULTIPLIER;
+            const n_MaxGroups_raw = (CLASSROOM_LOAD_FACTOR * Fpom * Pi) / Pgr;
+            const n_MaxGroups = Math.floor(n_MaxGroups_raw);
 
             document.getElementById('result_groups').innerHTML = 
-                `<p class="main-result">Максимальное количество учебных групп в год (по кабинетам): <strong>${Math.floor(resultValue)}</strong> групп.</p>`;
+                `<h4>РЕЗУЛЬТАТЫ:</h4>
+                 <p class="main-result">Максимальное количество групп, которое может быть выпущено в год: <strong>${n_MaxGroups}</strong> групп.</p>
+                 <p>
+                     <em>Для справки:</em> Вы могли бы провести ${n_MaxGroups_raw.toFixed(1)} курсов, но берем целое число.
+                 </p>
+                 <span class="note">Коэффициент загрузки класса 75% учтен.</span>`;
+            
+            // ИСПРАВЛЕНИЕ: Обновляем высоту аккордеона после вывода результатов
+            const accordionContent = document.getElementById('calc_groups').closest('.accordion-content');
+            if (accordionContent) {
+                accordionContent.style.maxHeight = accordionContent.scrollHeight + 40 + 'px';
+            }
         }
 
-        // --- 5. Калькулятор: Общее число учебных кабинетов (потребность) ---
+        // --- 5. Калькулятор: Потребность в учебных кабинетах
         function calculateClassrooms() {
             const Pgr = parseFloat(document.getElementById('Pgr_rooms').value);
             const n = parseFloat(document.getElementById('n_rooms').value);
             const hours_per_day = parseFloat(document.getElementById('hours_per_day_rooms').value);
-            
-            const Fpom = hours_per_day * ANNUAL_MULTIPLIER; 
-            const denominator = CLASSROOM_LOAD_FACTOR * Fpom;
 
-            if (denominator <= 0 || Pgr <= 0 || n <= 0) {
-                document.getElementById('result_classrooms').innerHTML = "Ошибка: Проверьте параметры (должны быть > 0).";
+            if (Pgr <= 0 || n <= 0 || hours_per_day <= 0) {
+                document.getElementById('result_classrooms').innerHTML = "Ошибка: Все параметры должны быть больше нуля.";
                 return;
             }
 
-            const resultValue = (Pgr * n) / denominator;
-            
+            const Fpom = hours_per_day * ANNUAL_MULTIPLIER;
+            const Required_Classrooms_raw = (Pgr * n) / (CLASSROOM_LOAD_FACTOR * Fpom);
+            const Required_Classrooms_min = Math.ceil(Required_Classrooms_raw);
+
             document.getElementById('result_classrooms').innerHTML = 
-                `<p class="main-result">Для теоретического обучения требуется: <strong>${Math.ceil(resultValue)}</strong> учебных кабинетов.</p>`;
+                `<h4>РЕЗУЛЬТАТЫ:</h4>
+                 <p class="main-result">Минимально необходимое количество учебных кабинетов: <strong>${Required_Classrooms_min}</strong> ед.</p>
+                 <p>
+                     <em>Для справки:</em> Расчетное число кабинетов: ${Required_Classrooms_raw.toFixed(2)}.
+                 </p>
+                 <span class="note">Для набора ${n} групп в год.</span>`;
+            
+            // ИСПРАВЛЕНИЕ: Обновляем высоту аккордеона после вывода результатов
+            const accordionContent = document.getElementById('calc_classrooms').closest('.accordion-content');
+            if (accordionContent) {
+                accordionContent.style.maxHeight = accordionContent.scrollHeight + 40 + 'px';
+            }
         }
 
-        // --- 6. Калькулятор: Максимальная ПРАКТИЧЕСКАЯ мощность ---
+        // --- 6. Калькулятор: Кол-во квот по кол-ву автомобилей
         function calculateStudents() {
             const Ntc = parseFloat(document.getElementById('Ntc_students').value);
-            const t = getDailyWorkHours('instructors_students');
+            const t_students = getDailyWorkHours('instructors_students');
             const T = parseFloat(document.getElementById('T_students').value);
-            
-            if (T <= 0 || Ntc < 1 || t <= 0) {
-                document.getElementById('result_students').innerHTML = "Ошибка: Проверьте значения Т, Количество ТС (>=1) и Инструкторов (>0).";
+
+            if (T <= 0 || Ntc < 1 || t_students <= 0) {
+                document.getElementById('result_students').innerHTML = "Ошибка: Проверьте параметры Т, Количество ТС (>=1) и Инструкторов (>0).";
                 return;
             }
-
-            const working_vehicles = Ntc - 1;
-            const resultValue = (working_vehicles * t * ANNUAL_MULTIPLIER) / T;
             
+            const working_vehicles = Ntc - 1;
+            const K_Max = Math.floor((working_vehicles * t_students * ANNUAL_MULTIPLIER) / T);
+
             document.getElementById('result_students').innerHTML = 
-                `<p class="main-result">Максимальное количество обучающихся в год (по автопарку, при ${t.toFixed(1)} ч/день): <strong>${Math.floor(resultValue)}</strong> человек.</p>`;
+                `<h4>МАКСИМАЛЬНОЕ КОЛИЧЕСТВО КУРСАНТОВ:</h4>
+                 <p class="main-result">Максимальная пропускная способность автопарка: <strong>${K_Max}</strong> человек в год.</p>
+                 <ul>
+                     <li>Используется ${working_vehicles} рабочих ТС (из ${Ntc} общих).</li>
+                 </ul>
+                 <span class="note">При работе ТС ${t_students.toFixed(1)} часов в день.</span>`;
+            
+            // ИСПРАВЛЕНИЕ: Обновляем высоту аккордеона после вывода результатов
+            const accordionContent = document.getElementById('calc_students').closest('.accordion-content');
+            if (accordionContent) {
+                accordionContent.style.maxHeight = accordionContent.scrollHeight + 40 + 'px';
+            }
         }
         
-        // --- 7. Калькулятор: Общее количество необходимых ТС ---
+        // --- 7. Калькулятор: Необходимое общее кол-во автомобилей
         function calculateVehicleTotal() {
             const T = parseFloat(document.getElementById('T_total').value);
             const K = parseFloat(document.getElementById('K_total').value);
-            const t = getDailyWorkHours('instructors_total');
-            const denominator = t * ANNUAL_MULTIPLIER;
+            const t_total = getDailyWorkHours('instructors_total');
 
-            if (denominator <= 0 || T <= 0 || K <= 0) {
+            if (T <= 0 || K <= 0 || t_total <= 0) {
                 document.getElementById('result_vehicle_total').innerHTML = "Ошибка: Все параметры должны быть больше нуля.";
                 return;
             }
 
-            const resultValue = (T * K / denominator);
-            const finalResult = Math.ceil(resultValue) + 1; 
-            
+            const Annual_TS_Hours = t_total * ANNUAL_MULTIPLIER;
+            const Required_Working_TS_raw = (T * K) / Annual_TS_Hours;
+            const Required_Working_TS = Math.ceil(Required_Working_TS_raw);
+            const Final_Required_TS = Required_Working_TS + 1; // + 1 резерв
+
             document.getElementById('result_vehicle_total').innerHTML = 
-                `Необходимое количество *рабочих* ТС: <strong>${Math.ceil(resultValue)}</strong> ед. ( ${Math.round(resultValue * 100) / 100} расчетное).<br>
-                 Общее количество необходимых транспортных средств (с учетом 1 резервного ТС, при ${t.toFixed(1)} ч/день): <strong>${finalResult}</strong>.`;
-        }
-
-        // Инициализация
-        window.onload = function() {
-            calculateSanPinLimit();
+                `<h4>НЕОБХОДИМОЕ КОЛИЧЕСТВО АВТОМОБИЛЕЙ:</h4>
+                 <p class="main-result">Общее количество учебных ТС (с учетом 1 резервного): <strong>${Final_Required_TS}</strong> ед.</p>
+                 <ul>
+                     <li>Расчетное количество рабочих ТС: ${Required_Working_TS_raw.toFixed(2)}.</li>
+                     <li>Требуемое количество рабочих ТС (округлено вверх): <strong>${Required_Working_TS}</strong> ед.</li>
+                 </ul>
+                 <span class="note">Рабочих ТС: ${Required_Working_TS} ед.</span>`;
             
-            // Инициализация пояснений для всех селектов
-            updateNote('note_target', document.getElementById('instructors_target').value);
-            updateNote('note_final', document.getElementById('instructors_final').value);
-            updateNote('note_students', document.getElementById('instructors_students').value);
-            updateNote('note_total', document.getElementById('instructors_total').value);
-            
-            // Инициализация высоты для первого (активного) аккордеона
-            const firstContent = document.querySelector('.accordion-item.active .accordion-content');
-            if (firstContent) {
-                firstContent.style.maxHeight = firstContent.scrollHeight + 40 + 'px';
+            // ИСПРАВЛЕНИЕ: Обновляем высоту аккордеона после вывода результатов
+            const accordionContent = document.getElementById('calc_vehicle_total').closest('.accordion-content');
+            if (accordionContent) {
+                accordionContent.style.maxHeight = accordionContent.scrollHeight + 40 + 'px';
             }
-        };
-
+        }
     </script>
 
 </body>
