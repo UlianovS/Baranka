@@ -1,788 +1,826 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Автошкола: Расчет квот</title>
-    <style>
-        /* --- Общие стили и Макет --- */
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; 
-            padding: 20px;
-            background-color: #f4f7f6;
-            color: #34495e; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 800px;
-            margin-top: 20px;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Автошкола: Расчет квот</title>
+    <style>
+        /* --- Общие стили и Макет --- */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 20px;
+            background-color: #f4f7f6;
+            color: #34495e; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 20px;
+        }
 
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            font-size: 2em;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-        .note.header-note {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #7f8c8d;
-            font-size: 1em;
-        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .note.header-note {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #7f8c8d;
+            font-size: 1em;
+        }
 
-        /* --- Стили Аккордеона --- */
-        .accordion-item {
-            margin-bottom: 10px;
-            border: 1px solid #bdc3c7;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
+        /* --- Стили Аккордеона --- */
+        .accordion-item {
+            margin-bottom: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
 
-        .accordion-header {
-            background-color: #ecf0f1;
-            padding: 15px 20px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-            font-size: 1.1em;
-            color: #2c3e50;
-            transition: background-color 0.2s ease;
-        }
-        .accordion-header:hover {
-            background-color: #e0e6e8;
-        }
-        /* Синий для активного аккордеона */
-        .accordion-item.active .accordion-header {
-            background-color: #007bff; 
-            color: white;
-        }
+        .accordion-header {
+            background-color: #ecf0f1;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #2c3e50;
+            transition: background-color 0.2s ease;
+        }
+        .accordion-header:hover {
+            background-color: #e0e6e8;
+        }
+        /* Синий для активного аккордеона */
+        .accordion-item.active .accordion-header {
+            background-color: #007bff; 
+            color: white;
+        }
 
-        .accordion-content {
-            padding: 0 20px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
-            background-color: #ffffff;
-        }
-        
-        .accordion-item.active .accordion-content {
-            padding: 20px;
-            max-height: 4000px; 
-        }
-        .accordion-icon {
-            font-size: 1.2em;
-            transition: transform 0.3s ease;
-        }
-        .accordion-item.active .accordion-icon {
-            transform: rotate(90deg);
-        }
-
-
-        /* --- Стили Калькулятора (внутри контента) --- */
-        .calculator {
-            padding: 20px 0;
-            margin-bottom: 10px;
-            border-left: 4px solid #007bff;
-            padding-left: 15px;
-            background-color: #ffffff;
-            scroll-margin-top: 80px; 
-        }
-        .calculator:not(:last-child) {
-            border-bottom: 1px dashed #ecf0f1;
-        }
-
-        h3 { 
-            color: #007bff; 
-            font-size: 1.2em;
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-weight: 600;
-            padding-bottom: 5px;
-        }
-        .h3-reverse {
-            color: #28a745; 
-            border-bottom: 2px solid #28a745;
-        }
-        .h3-important {
-             color: #007bff; 
-             border-bottom: 2px solid #007bff;
-        }
-        
-        /* Лейблы и поля ввода */
-        label { 
-            display: block; 
-            margin-top: 10px; 
-            font-weight: 500; 
-            color: #495057;
-            font-size: 0.95em;
-        }
-        input[type="number"], select {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-top: 4px;
-            box-sizing: border-box;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            font-size: 1em;
-        }
-        
-        /* Кнопки */
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 18px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 15px;
-            font-size: 1em;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
-            width: 100%;
-        }
-        button:hover { 
-            background-color: #0056b3; 
-        }
-        .btn-reverse {
-            background-color: #28a745;
-        }
-        .btn-reverse:hover {
-            background-color: #1e7e34;
-        }
-        
-        /* --- БЛОК РЕЗУЛЬТАТОВ: СТАНДАРТ (ЗЕЛЕНЫЙ) --- */
-        .result {
-            margin-top: 15px;
-            padding: 15px;
-            border: 2px solid #28a745; 
-            background-color: #e6f7eb; 
-            color: #1e7e34; /* Основной темно-зеленый текст для всего блока */
-            border-radius: 6px;
-            font-size: 1.05em;
-            line-height: 1.5;
-        }
-        /* Жирный текст внутри зеленого блока */
-        .result strong {
-            font-weight: bold;
-            color: #1e7e34; 
-        }
-        
-        /* --- БЛОК РЕЗУЛЬТАТОВ: ВАЖНЫЙ (СИНИЙ - для сравнения и лимитов) --- */
-        .result-important {
-            border-color: #007bff;
-            background-color: #e6f0ff; 
-            color: #0056b3; /* Основной темно-синий текст для всего блока */
-        }
-        .result-important strong {
-            color: #004085;
-        }
-        
-        /* Общие стили для заголовков результатов */
-        .result h4 {
-            font-size: 1.1em;
-            margin: 0 0 10px 0; 
-            padding-bottom: 5px;
-            color: inherit; /* Наследует цвет от родительского блока (.result или .result-important) */
-            border-bottom: 1px solid currentColor; 
-            font-weight: 600; 
-        }
-
-        /* Стиль для главного вывода (реальный лимит) */
-        .result p.main-result {
-            font-size: 1.15em;
-            font-weight: 600;
-            margin: 10px 0;
-            color: inherit; /* Наследует цвет от родителя */
-        }
-        
-        .result ul {
-            list-style-type: none;
-            padding-left: 0;
-            margin-top: 10px;
-        }
-        /* Стандартный маркер для списка в зеленом блоке */
-        .result:not(.result-important) ul li:before {
-            content: "•"; 
-            color: #28a745; /* Зеленый маркер */
-            font-weight: bold; 
-            display: inline-block; 
-            width: 1em;
-            margin-left: -1em;
-        }
-        /* Стандартный маркер для списка в синем блоке */
-        .result-important ul li:before {
-            content: "•"; 
-            color: #007bff; /* Синий маркер */
-            font-weight: bold; 
-            display: inline-block; 
-            width: 1em;
-            margin-left: -1em;
-        }
-        .result ul li {
-            margin-bottom: 5px;
-            color: inherit; /* Убедимся, что цвет текста пункта списка наследуется */
-        }
+        .accordion-content {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+            background-color: #ffffff;
+        }
+        
+        .accordion-item.active .accordion-content {
+            padding: 20px;
+            max-height: 4000px; 
+        }
+        .accordion-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+        }
+        .accordion-item.active .accordion-icon {
+            transform: rotate(90deg);
+        }
 
 
-        /* Особый стиль для Инструкторов теперь просто пункт списка */
-        /* Удаляем специфичный цвет и эмодзи, чтобы соответствовать остальным li */
-        /* .result ul li.instructor-count {
-            color: #0056b3; 
-            font-weight: bold;
-            margin-top: 10px; 
-        }
-        .result ul li.instructor-count:before {
-            content: "🧑‍🏫"; 
-            color: #0056b3;
-            font-weight: bold; 
-            display: inline-block; 
-            width: 1em;
-            margin-left: -1em;
-        } */
+        /* --- Стили Калькулятора (внутри контента) --- */
+        .calculator {
+            padding: 20px 0;
+            margin-bottom: 10px;
+            border-left: 4px solid #007bff;
+            padding-left: 15px;
+            background-color: #ffffff;
+            scroll-margin-top: 80px; 
+        }
+        .calculator:not(:last-child) {
+            border-bottom: 1px dashed #ecf0f1;
+        }
 
-        /* Примечания */
-        .note {
-            font-style: italic;
-            color: #7f8c8d;
-            margin-top: 5px;
-            font-size: 0.85em;
-            display: block;
-        }
-        .result .note {
-            color: inherit; /* Наследует цвет от родительского блока, чтобы быть зеленым в зеленом блоке */
-            font-size: 0.9em;
-            margin-top: 15px;
-        }
+        h3 { 
+            color: #007bff; 
+            font-size: 1.2em;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: 600;
+            padding-bottom: 5px;
+        }
+        .h3-reverse {
+            color: #28a745; 
+            border-bottom: 2px solid #28a745;
+        }
+        .h3-important {
+             color: #007bff; 
+             border-bottom: 2px solid #007bff;
+        }
+        
+        /* Лейблы и поля ввода */
+        label { 
+            display: block; 
+            margin-top: 10px; 
+            font-weight: 500; 
+            color: #495057;
+            font-size: 0.95em;
+        }
+        input[type="number"], select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-top: 4px;
+            box-sizing: border-box;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        
+        /* Кнопки */
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        button:hover { 
+            background-color: #0056b3; 
+        }
+        .btn-reverse {
+            background-color: #28a745;
+        }
+        .btn-reverse:hover {
+            background-color: #1e7e34;
+        }
+        
+        /* --- БЛОК РЕЗУЛЬТАТОВ: СТАНДАРТ (ЗЕЛЕНЫЙ) --- */
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border: 2px solid #28a745; 
+            background-color: #e6f7eb; 
+            color: #1e7e34; /* Основной темно-зеленый текст для всего блока */
+            border-radius: 6px;
+            font-size: 1.05em;
+            line-height: 1.5;
+        }
+        /* Жирный текст внутри зеленого блока */
+        .result strong {
+            font-weight: bold;
+            color: #1e7e34; 
+        }
+        
+        /* --- БЛОК РЕЗУЛЬТАТОВ: ВАЖНЫЙ (СИНИЙ - для сравнения и лимитов) --- */
+        .result-important {
+            border-color: #007bff;
+            background-color: #e6f0ff; 
+            color: #0056b3; /* Основной темно-синий текст для всего блока */
+        }
+        .result-important strong {
+            color: #004085;
+        }
+        
+        /* Общие стили для заголовков результатов */
+        .result h4 {
+            font-size: 1.1em;
+            margin: 0 0 10px 0; 
+            padding-bottom: 5px;
+            color: inherit; /* Наследует цвет от родительского блока (.result или .result-important) */
+            border-bottom: 1px solid currentColor; 
+            font-weight: 600; 
+        }
 
-        .input-group {
-            margin-top: 10px;
-            padding: 15px;
-            background-color: #f9fbfb;
-            border-radius: 5px;
-            border: 1px dashed #dce1e3;
-        }
-        .input-group h4 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            color: #34495e;
-            font-size: 1em;
-            font-weight: 600;
-        }
-        
-        /* Стили для ссылок навигации */
-        .nav-link {
-            cursor: pointer;
-            color: #007bff;
-            text-decoration: underline;
-            font-weight: 500;
-            font-size: 0.9em;
-            margin-top: 5px;
-            display: inline-block;
-        }
-        .nav-link:hover {
-            color: #0056b3;
-        }
-    </style>
+        /* Стиль для главного вывода (реальный лимит) */
+        .result p.main-result {
+            font-size: 1.15em;
+            font-weight: 600;
+            margin: 10px 0;
+            color: inherit; /* Наследует цвет от родителя */
+        }
+        
+        .result ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-top: 10px;
+        }
+        /* Стандартный маркер для списка в зеленом блоке */
+        .result:not(.result-important) ul li:before {
+            content: "•"; 
+            color: #28a745; /* Зеленый маркер */
+            font-weight: bold; 
+            display: inline-block; 
+            width: 1em;
+            margin-left: -1em;
+        }
+        /* Стандартный маркер для списка в синем блоке */
+        .result-important ul li:before {
+            content: "•"; 
+            color: #007bff; /* Синий маркер */
+            font-weight: bold; 
+            display: inline-block; 
+            width: 1em;
+            margin-left: -1em;
+        }
+        .result ul li {
+            margin-bottom: 5px;
+            color: inherit; /* Убедимся, что цвет текста пункта списка наследуется */
+        }
+
+
+        /* Особый стиль для Инструкторов теперь просто пункт списка */
+        /* Удаляем специфичный цвет и эмодзи, чтобы соответствовать остальным li */
+        /* .result ul li.instructor-count {
+            color: #0056b3; 
+            font-weight: bold;
+            margin-top: 10px; 
+        }
+        .result ul li.instructor-count:before {
+            content: "🧑‍🏫"; 
+            color: #0056b3;
+            font-weight: bold; 
+            display: inline-block; 
+            width: 1em;
+            margin-left: -1em;
+        } */
+
+        /* Примечания */
+        .note {
+            font-style: italic;
+            color: #7f8c8d;
+            margin-top: 5px;
+            font-size: 0.85em;
+            display: block;
+        }
+        .result .note {
+            color: inherit; /* Наследует цвет от родительского блока, чтобы быть зеленым в зеленом блоке */
+            font-size: 0.9em;
+            margin-top: 15px;
+        }
+
+        .input-group {
+            margin-top: 10px;
+            padding: 15px;
+            background-color: #f9fbfb;
+            border-radius: 5px;
+            border: 1px dashed #dce1e3;
+        }
+        .input-group h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #34495e;
+            font-size: 1em;
+            font-weight: 600;
+        }
+        
+        /* Стили для ссылок навигации */
+        .nav-link {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: underline;
+            font-weight: 500;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: inline-block;
+        }
+        .nav-link:hover {
+            color: #0056b3;
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Автошкола: Расчет квот</h1>
-    <span class="note header-note">Расчеты для категории «В» с учетом требований СанПиН и ГИБДД.</span>
+    <h1>Автошкола: Расчет квот</h1>
+    <span class="note header-note">Расчеты для категории «В» с учетом требований СанПиН и ГИБДД.</span>
 
-    <div class="container">
-        
-        <div class="accordion-item active">
-            <div class="accordion-header" onclick="toggleAccordion(this)">
-                <span>1. Расчет необходимых ресурсов для желаемого кол-ва квот</span>
-                <span class="accordion-icon">></span>
-            </div>
-            <div class="accordion-content">
-                <div class="calculator" id="calc_reverse">
-                    <h3 class="h3-reverse">Основной калькулятор. Целевое планирование</h3>
-                    <span class="note">Введите желаемое количество обучающихся в год и параметры работы, чтобы определить минимально необходимые ресурсы.</span>
+    <div class="container">
+        
+        <div class="accordion-item active">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>1. Расчет необходимых ресурсов для желаемого кол-ва квот</span>
+                <span class="accordion-icon">></span>
+            </div>
+            <div class="accordion-content">
+                <div class="calculator" id="calc_reverse">
+                    <h3 class="h3-reverse">Основной калькулятор. Целевое планирование</h3>
+                    <span class="note">Введите желаемое количество обучающихся в год и параметры работы, чтобы определить минимально необходимые ресурсы.</span>
 
-                    <div class="input-group">
-                        <h4>Целевые параметры:</h4>
-                        <label for="K_target">Желаемое количество обучающихся в год:</label>
-                        <input type="number" id="K_target" value="300">
-                        <label for="Sgr_target">Планируемый средний размер учебной группы:</label>
-                        <input type="number" id="Sgr_target" value="30">
-                        <span class="nav-link" onclick="scrollToElement('calc_sanpin')">→ Перейти к расчету лимита группы по СанПиН</span>
-                    </div>
-                    
-                    <div class="input-group">
-                        <h4>Параметры курса и работы:</h4>
-                        <label for="Pgr_target">Продолжительность теоретического курса на группу (час):</label>
-                        <input type="number" id="Pgr_target" value="138">
-                        <label for="T_total_target">Количество часов вождения по учебному плану:</label>
-                        <input type="number" id="T_total_target" value="56">
-                        
-                        <label for="instructors_target">Сколько инструкторов на одной машине?</label>
-                        <select id="instructors_target" onchange="updateNote('note_target', this.value)">
-                            <option value="1">1 Инструктор (1 смена)</option>
-                            <option value="2" selected>2 Инструктора (2 смены)</option>
-                        </select>
-                        <span class="note" id="note_target">
-                            **Пояснение:** При 2 инструкторах, расчетное время работы ТС в день - 14.4 часа (2 * 7.2 часа).
-                        </span>
-                        
-                        <label for="hours_per_day_target">Использование класса (Кол-во часов в день):</label>
-                        <input type="number" id="hours_per_day_target" value="8">
-                    </div>
+                    <div class="input-group">
+                        <h4>Целевые параметры:</h4>
+                        <label for="K_target">Желаемое количество обучающихся в год:</label>
+                        <input type="number" id="K_target" value="300">
+                        <label for="Sgr_target">Планируемый средний размер учебной группы:</label>
+                        <input type="number" id="Sgr_target" value="30">
+                        <span class="nav-link" onclick="scrollToElement('calc_sanpin')">→ Перейти к расчету лимита группы по СанПиН</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <h4>Параметры курса и работы:</h4>
+                        <label for="Pgr_target">Продолжительность теоретического курса на группу (час):</label>
+                        <input type="number" id="Pgr_target" value="138">
+                        <label for="T_total_target">Количество часов вождения по учебному плану:</label>
+                        <input type="number" id="T_total_target" value="56">
+                        
+                        <label for="instructors_target">Сколько инструкторов на одной машине?</label>
+                        <select id="instructors_target" onchange="updateNote('note_target', this.value)">
+                            <option value="1">1 Инструктор (1 смена)</option>
+                            <option value="2" selected>2 Инструктора (2 смены)</option>
+                        </select>
+                        <span class="note" id="note_target">
+                            **Пояснение:** При 2 инструкторах, расчетное время работы ТС в день - 14.4 часа (2 * 7.2 часа).
+                        </span>
+                        
+                        <label for="hours_per_day_target">Использование класса (Кол-во часов в день):</label>
+                        <input type="number" id="hours_per_day_target" value="8">
+                    </div>
 
-                    <button onclick="calculateReverse()" class="btn-reverse">Рассчитать</button>
-                    <div class="result" id="result_reverse"></div>
-                </div>
-            </div>
-        </div>
+                    <button onclick="calculateReverse()" class="btn-reverse">Рассчитать</button>
+                    <div class="result" id="result_reverse"></div>
+                </div>
+            </div>
+        </div>
 
-        <div class="accordion-item">
-            <div class="accordion-header" onclick="toggleAccordion(this)">
-                <span>2. Расчет пропускной способности и ресурсов</span>
-                <span class="accordion-icon">></span>
-            </div>
-            <div class="accordion-content">
-                
-                <div class="calculator" id="calc_sanpin">
-                    <h3 class="h3-important">Расчет 2.1. Ограничение по СанПиН (Размер группы)</h3>
-                    <span class="note">Определяет верхний лимит размера группы исходя из площади кабинета (2.5 кв.м на человека).</span>
-                    <label for="Area_sanpin">Площадь учебного кабинета (кв.м):</label>
-                    <input type="number" id="Area_sanpin" value="75">
-                    <label for="Area_norm">Норма площади на 1 ученика (кв.м):</label>
-                    <input type="number" id="Area_norm" value="2.5" readonly>
-                    <button onclick="calculateSanPinLimit()">Рассчитать максимальный размер группы</button>
-                    <div class="result result-important" id="result_sanpin"></div>
-                </div>
-                
-                <div class="calculator" id="calc_final_limit">
-                    <h3 class="h3-important">Расчет 2.2. Реальная максимальная пропускная способность (Лимиты)</h3>
-                    <span class="note">Сравнивает мощность автопарка и классов, чтобы определить ваш фактический годовой лимит квот</span>
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>2. Расчет пропускной способности и ресурсов</span>
+                <span class="accordion-icon">></span>
+            </div>
+            <div class="accordion-content">
+                
+                <div class="calculator" id="calc_sanpin">
+                    <h3 class="h3-important">Расчет 2.1. Ограничение по СанПиН (Размер группы)</h3>
+                    <span class="note">Определяет верхний лимит размера группы исходя из площади кабинета (2.5 кв.м на человека).</span>
+                    <label for="Area_sanpin">Площадь учебного кабинета (кв.м):</label>
+                    <input type="number" id="Area_sanpin" value="75">
+                    <label for="Area_norm">Норма площади на 1 ученика (кв.м):</label>
+                    <input type="number" id="Area_norm" value="2.5" readonly>
+                    <button onclick="calculateSanPinLimit()">Рассчитать максимальный размер группы</button>
+                    <div class="result result-important" id="result_sanpin"></div>
+                </div>
+                
+                <div class="calculator" id="calc_final_limit">
+                    <h3 class="h3-important">Расчет 2.2. Реальная максимальная пропускная способность (Лимиты)</h3>
+                    <span class="note">Сравнивает мощность автопарка и классов, чтобы определить ваш фактический годовой лимит квот</span>
 
-                    <div class="input-group">
-                        <h4>Параметры практики:</h4>
-                        <label for="Ntc_final">Общее количество учебных ТС по факту (включая резервное ТС):</label>
-                        <input type="number" id="Ntc_final" value="5">
-                        
-                        <label for="instructors_final">Сколько инструкторов на одной машине?</label>
-                        <select id="instructors_final" onchange="updateNote('note_final', this.value)">
-                            <option value="1">1 Инструктор (1 смена)</option>
-                            <option value="2" selected>2 Инструктора (2 смены)</option>
-                        </select>
-                        <span class="note" id="note_final">
-                            **Пояснение:** При 2 инструкторах, расчетное время работы ТС в день - 14.4 часа (2 * 7.2 часа).
-                        </span>
-                        
-                        <label for="T_final">Общее количество часов вождения по учебному плану (Т):</label>
-                        <input type="number" id="T_final" value="56">
-                    </div>
+                    <div class="input-group">
+                        <h4>Параметры практики:</h4>
+                        <label for="Ntc_final">Общее количество учебных ТС по факту (включая резервное ТС):</label>
+                        <input type="number" id="Ntc_final" value="5">
+                        
+                        <label for="instructors_final">Сколько инструкторов на одной машине?</label>
+                        <select id="instructors_final" onchange="updateNote('note_final', this.value)">
+                            <option value="1">1 Инструктор (1 смена)</option>
+                            <option value="2" selected>2 Инструктора (2 смены)</option>
+                        </select>
+                        <span class="note" id="note_final">
+                            **Пояснение:** При 2 инструкторах, расчетное время работы ТС в день - 14.4 часа (2 * 7.2 часа).
+                        </span>
+                        
+                        <label for="T_final">Общее количество часов вождения по учебному плану (Т):</label>
+                        <input type="number" id="T_final" value="56">
+                    </div>
 
-                    <div class="input-group">
-                        <h4>Параметры теории:</h4>
-                        <label for="hours_per_day_final">Использование класса (Кол-во часов в день):</label>
-                        <input type="number" id="hours_per_day_final" value="4">
-                        <label for="Pi_final">Количество имеющихся кабинетов:</label>
-                        <input type="number" id="Pi_final" value="1">
-                        <label for="Pgr_final">Продолжительность курса на группу (час):</label>
-                        <input type="number" id="Pgr_final" value="138">
-                    </div>
+                    <div class="input-group">
+                        <h4>Параметры теории:</h4>
+                        <label for="hours_per_day_final">Использование класса (Кол-во часов в день):</label>
+                        <input type="number" id="hours_per_day_final" value="4">
+                        <label for="Pi_final">Количество имеющихся кабинетов:</label>
+                        <input type="number" id="Pi_final" value="1">
+                        <label for="Pgr_final">Продолжительность курса на группу (час):</label>
+                        <input type="number" id="Pgr_final" value="138">
+                    </div>
 
-                    <div class="input-group">
-                        <h4>Связующий параметр:</h4>
-                        <label for="Sgr_final">Планируемый средний размер учебной группы (человек):</label>
-                        <input type="number" id="Sgr_final" value="30">
-                    </div>
-                    
-                    <button onclick="calculateFinalLimit()">ОПРЕДЕЛИТЬ РЕАЛЬНЫЙ ЛИМИТ ОБУЧАЮЩИХСЯ</button>
-                    <div class="result result-important" id="result_final_limit"></div>
-                </div>
-                
-                <div class="calculator" id="calc_groups">
-                    <h3>Расчет 2.3. Максимальное кол-во групп</h3>
-                    <span class="note">Показывает, сколько групп может "пропустить" ваш учебный кабинет.</span>
-                    <label for="hours_per_day_groups">Использование класса (Кол-во часов в день):</label>
-                    <input type="number" id="hours_per_day_groups" value="4">
-                    <label for="Pi_groups">Количество имеющихся учебных кабинетов:</label>
-                    <input type="number" id="Pi_groups" value="1">
-                    <label for="Pgr_groups">Продолжительность теоретического курса на одну группу (в часах):</label>
-                    <input type="number" id="Pgr_groups" value="138">
-                    <button onclick="calculateGroups()">Рассчитать кол-во групп</button>
-                    <div class="result" id="result_groups"></div>
-                </div>
+                    <div class="input-group">
+                        <h4>Связующий параметр:</h4>
+                        <label for="Sgr_final">Планируемый средний размер учебной группы (человек):</label>
+                        <input type="number" id="Sgr_final" value="30">
+                    </div>
+                    
+                    <button onclick="calculateFinalLimit()">ОПРЕДЕЛИТЬ РЕАЛЬНЫЙ ЛИМИТ ОБУЧАЮЩИХСЯ</button>
+                    <div class="result result-important" id="result_final_limit"></div>
+                </div>
+                
+                <div class="calculator" id="calc_groups">
+                    <h3>Расчет 2.3. Максимальное кол-во групп</h3>
+                    <span class="note">Показывает, сколько групп может "пропустить" ваш учебный кабинет.</span>
+                    <label for="hours_per_day_groups">Использование класса (Кол-во часов в день):</label>
+                    <input type="number" id="hours_per_day_groups" value="4">
+                    <label for="Pi_groups">Количество имеющихся учебных кабинетов:</label>
+                    <input type="number" id="Pi_groups" value="1">
+                    <label for="Pgr_groups">Продолжительность теоретического курса на одну группу (в часах):</label>
+                    <input type="number" id="Pgr_groups" value="138">
+                    <button onclick="calculateGroups()">Рассчитать кол-во групп</button>
+                    <div class="result" id="result_groups"></div>
+                </div>
 
-                <div class="calculator" id="calc_classrooms">
-                    <h3>Расчет 2.4. Потребность в учебных кабинетах</h3>
-                    <span class="note">Сколько кабинетов нужно для запланированного количества групп.</span>
-                    <label for="Pgr_rooms">Продолжительность теоретического курса на одну группу (в часах):</label>
-                    <input type="number" id="Pgr_rooms" value="138">
-                    <label for="n_rooms">Общее число групп (n), которые планируется набрать в год:</label>
-                    <input type="number" id="n_rooms" value="6">
-                    <label for="hours_per_day_rooms">Использование класса (Кол-во часов в день):</label>
-                    <input type="number" id="hours_per_day_rooms" value="4">
-                    <button onclick="calculateClassrooms()">Рассчитать кол-во кабинетов</button>
-                    <div class="result" id="result_classrooms"></div>
-                </div>
+                <div class="calculator" id="calc_classrooms">
+                    <h3>Расчет 2.4. Потребность в учебных кабинетах</h3>
+                    <span class="note">Сколько кабинетов нужно для запланированного количества групп.</span>
+                    <label for="Pgr_rooms">Продолжительность теоретического курса на одну группу (в часах):</label>
+                    <input type="number" id="Pgr_rooms" value="138">
+                    <label for="n_rooms">Общее число групп (n), которые планируется набрать в год:</label>
+                    <input type="number" id="n_rooms" value="6">
+                    <label for="hours_per_day_rooms">Использование класса (Кол-во часов в день):</label>
+                    <input type="number" id="hours_per_day_rooms" value="4">
+                    <button onclick="calculateClassrooms()">Рассчитать кол-во кабинетов</button>
+                    <div class="result" id="result_classrooms"></div>
+                </div>
 
-                <div class="calculator" id="calc_students">
-                    <h3>Расчет 2.5. Кол-во квот по кол-ву автомобилей</h3>
-                    <span class="note">Сколько студентов может "пропустить" ваш автопарк.</span>
-                    <label for="Ntc_students">Общее количество учебных транспортных средств по факту (включая 1 резервное ТС):</label>
-                    <input type="number" id="Ntc_students" value="5">
-                    
-                    <label for="instructors_students">Сколько инструкторов на одной машине?</label>
-                    <select id="instructors_students" onchange="updateNote('note_students', this.value)">
-                        <option value="1">1 Инструктор (1 смена)</option>
-                        <option value="2" selected>2 Инструктора (2 смены)</option>
-                    </select>
-                    <span class="note" id="note_students">
-                        **Пояснение:** При 2 инструкторах, расчетное время работы ТС в день - 14.4 часа (2 * 7.2 часа).
-                    </span>
-                    
-                    <label for="T_students">Общее количество часов вождения по учебному плану:</label>
-                    <input type="number" id="T_students" value="56">
-                    <button onclick="calculateStudents()">Рассчитать максимальное кол-во курсантов</button>
-                    <div class="result" id="result_students"></div>
-                </div>
-                
-                <div class="calculator" id="calc_vehicle_total">
-                    <h3>Расчет 2.6. Необходимое общее кол-во автомобилей</h3>
-                    <span class="note">Расчет общего количества ТС, включая 1 резервное учебное ТС.</span>
-                    <label for="T_total">Общее количество часов вождения по учебному плану:</label>
-                    <input type="number" id="T_total" value="56">
-                    <label for="K_total">Планируемое общее количество обучающихся в год:</label>
-                    <input type="number" id="K_total" value="190">
-                    
-                    <label for="instructors_total">Сколько инструкторов на одной машине?</label>
-                    <select id="instructors_total" onchange="updateNote('note_total', this.value)">
-                        <option value="1">1 Инструктор (1 смена)</option>
-                        <option value="2" selected>2 Инструктора (2 смены)</option>
-                    </select>
-                    <span class="note" id="note_total">
-                        **Пояснение:** При 2 инструкторах, расчетное время работы ТС в день - 14.4 часа (2 * 7.2 часа).
-                    </span>
-                    
-                    <button onclick="calculateVehicleTotal()">Рассчитать общее кол-во авто</button>
-                    <div class="result" id="result_vehicle_total"></div>
-                </div>
+                <div class="calculator" id="calc_students">
+                    <h3>Расчет 2.5. Кол-во квот по кол-ву автомобилей</h3>
+                    <span class="note">Сколько студентов может "пропустить" ваш автопарк.</span>
+                    <label for="Ntc_students">Общее количество учебных транспортных средств по факту (включая 1 резервное ТС):</label>
+                    <input type="number" id="Ntc_students" value="5">
+                    
+                    <label for="instructors_students">Сколько инструкторов на одной машине?</label>
+                    <select id="instructors_students" onchange="updateNote('note_students', this.value)">
+                        <option value="1">1 Инструктор (1 смена)</option>
+                        <option value="2" selected>2 Инструктора (2 смены)</option>
+                    </select>
+                    <span class="note" id="note_students">
+                        **Пояснение:** При 2 инструкторах, расчетное время работы ТС в день - 14.4 часа (2 * 7.2 часа).
+                    </span>
+                    
+                    <label for="T_students">Общее количество часов вождения по учебному плану:</label>
+                    <input type="number" id="T_students" value="56">
+                    <button onclick="calculateStudents()">Рассчитать максимальное кол-во курсантов</button>
+                    <div class="result" id="result_students"></div>
+                </div>
+                
+                <div class="calculator" id="calc_vehicle_total">
+                    <h3>Расчет 2.6. Необходимое общее кол-во автомобилей</h3>
+                    <span class="note">Расчет общего количества ТС, включая 1 резервное учебное ТС.</span>
+                    <label for="T_total">Общее количество часов вождения по учебному плану:</label>
+                    <input type="number" id="T_total" value="56">
+                    <label for="K_total">Планируемое общее количество обучающихся в год:</label>
+                    <input type="number" id="K_total" value="190">
+                    
+                    <label for="instructors_total">Сколько инструкторов на одной машине?</label>
+                    <select id="instructors_total" onchange="updateNote('note_total', this.value)">
+                        <option value="1">1 Инструктор (1 смена)</option>
+                        <option value="2" selected>2 Инструктора (2 смены)</option>
+                    </select>
+                    <span class="note" id="note_total">
+                        **Пояснение:** При 2 инструкторах, расчетное время работы ТС в день - 14.4 часа (2 * 7.2 часа).
+                    </span>
+                    
+                    <button onclick="calculateVehicleTotal()">Рассчитать общее кол-во авто</button>
+                    <div class="result" id="result_vehicle_total"></div>
+                </div>
 
-            </div>
-        </div>
-        
-    </div>
-    
-    <script>
-        // Глобальные константы
-        const DAYS_PER_MONTH = 24.5;
-        const MONTHS_PER_YEAR = 12;
-        const ANNUAL_MULTIPLIER = DAYS_PER_MONTH * MONTHS_PER_YEAR; // 294
-        const CLASSROOM_LOAD_FACTOR = 0.75; // Коэффициент загрузки 75%
-        const SANPIN_NORM = 2.5; // 2.5 кв.м на 1 ученика
-        const STANDARD_SHIFT_HOURS = 7.2; // 7.2 часа в смену
+            </div>
+        </div>
+        
+    </div>
+    
+    <script>
+        // Глобальные константы
+        const DAYS_PER_MONTH = 24.5;
+        const MONTHS_PER_YEAR = 12;
+        const ANNUAL_MULTIPLIER = DAYS_PER_MONTH * MONTHS_PER_YEAR; // 294
+        const CLASSROOM_LOAD_FACTOR = 0.75; // Коэффициент загрузки 75%
+        const SANPIN_NORM = 2.5; // 2.5 кв.м на 1 ученика
+        const STANDARD_SHIFT_HOURS = 7.2; // 7.2 часа в смену
 
-        // --- Функция для определения времени работы ТС (НОВЫЙ ХЕЛПЕР) ---
-        function getDailyWorkHours(instructor_id) {
-            const instructors = parseInt(document.getElementById(instructor_id).value);
-            return instructors * STANDARD_SHIFT_HOURS;
-        }
+        // --- Функция для определения времени работы ТС (НОВЫЙ ХЕЛПЕР) ---
+        function getDailyWorkHours(instructor_id) {
+            const instructors = parseInt(document.getElementById(instructor_id).value);
+            return instructors * STANDARD_SHIFT_HOURS;
+        }
 
-        // --- Функция для обновления пояснения (НОВЫЙ ХЕЛПЕР) ---
-        function updateNote(note_id, instructors_value) {
-            const hours = parseInt(instructors_value) * STANDARD_SHIFT_HOURS;
-            const noteElement = document.getElementById(note_id);
-            if (noteElement) {
-                noteElement.innerHTML = `**Пояснение:** При ${instructors_value} инструкторах, расчетное время работы ТС в день - ${hours.toFixed(1)} часа (${instructors_value} * 7.2 часа).`;
-            }
-        }
-        
-        // --- Функция для Аккордеона ---
-        function toggleAccordion(header) {
-            const item = header.parentNode;
-            const content = header.nextElementSibling;
-            
-            if (item.classList.contains('active')) {
-                item.classList.remove('active');
-                content.style.maxHeight = '0';
-            } else {
-                document.querySelectorAll('.accordion-item.active').forEach(openItem => {
-                    openItem.classList.remove('active');
-                    openItem.querySelector('.accordion-content').style.maxHeight = '0';
-                });
-                
-                item.classList.add('active');
-                content.style.maxHeight = content.scrollHeight + 40 + 'px'; 
-            }
-        }
-        
-        // --- Функция для Скролла (Навигации) ---
-        function scrollToElement(id) {
-            const element = document.getElementById(id);
-            if (element) {
-                // Убедимся, что аккордеон, содержащий элемент, открыт
-                let currentItem = element.closest('.accordion-item');
-                if (currentItem && !currentItem.classList.contains('active')) {
-                    toggleAccordion(currentItem.querySelector('.accordion-header'));
-                }
-                
-                // Прокрутка с учетом отступа
-                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
-
-
-        // --- 1. Калькулятор: Расчет необходимых ресурсов для Плана (От Обратного) ---
-        function calculateReverse() {
-            const K_target = parseFloat(document.getElementById('K_target').value);
-            const Sgr_target = parseFloat(document.getElementById('Sgr_target').value);
-            const T_total_target = parseFloat(document.getElementById('T_total_target').value);
-            const Pgr_target = parseFloat(document.getElementById('Pgr_target').value);
-            const t_ts_target = getDailyWorkHours('instructors_target');
-            const hours_per_day_target = parseFloat(document.getElementById('hours_per_day_target').value);
-
-            if (K_target <= 0 || Sgr_target <= 0 || Pgr_target <= 0 || t_ts_target <= 0 || hours_per_day_target <= 0 || T_total_target <= 0) {
-                 document.getElementById('result_reverse').innerHTML = "Ошибка: Все параметры должны быть больше нуля.";
-                 return;
-            }
-
-            // 1. Необходимая площадь кабинета (по СанПиН)
-            const Required_Area = Sgr_target * SANPIN_NORM;
-
-            // 2. Необходимое количество групп (n)
-            const Required_Groups = Math.ceil(K_target / Sgr_target);
-
-            // 3. Необходимое количество кабинетов (П)
-            const Fpom_target = hours_per_day_target * ANNUAL_MULTIPLIER;
-            const Required_Classrooms_raw = (Pgr_target * Required_Groups) / (CLASSROOM_LOAD_FACTOR * Fpom_target);
-            const Required_Classrooms_min = Math.ceil(Required_Classrooms_raw);
-
-            // 4. Необходимое количество ТС (Практика)
-            const Annual_TS_Hours = t_ts_target * ANNUAL_MULTIPLIER;
-            const Required_Working_TS_raw = (T_total_target * K_target) / Annual_TS_Hours;
-            const Required_Working_TS = Math.ceil(Required_Working_TS_raw);
-            const Final_Required_TS = Required_Working_TS + 1; // + 1 резерв
-            
-            // 5. Необходимое количество Инструкторов
-            const Instructor_Working_Hours_Per_Year = STANDARD_SHIFT_HOURS * ANNUAL_MULTIPLIER; // 7.2 * 294
-            const Total_Instructor_Hours = T_total_target * K_target;
-            const Required_Instructors_raw = Total_Instructor_Hours / Instructor_Working_Hours_Per_Year;
-            const Required_Instructors_min = Math.ceil(Required_Instructors_raw);
-
-            // 6. Формирование результата с чистым HTML
-            document.getElementById('result_reverse').innerHTML = 
-                `<h4>ДЛЯ ${K_target} ОБУЧАЮЩИХСЯ В ГОД ВАМ НЕОБХОДИМО:</h4>
-                 
-                 <strong>1. ТЕОРИЯ (Классы и СанПиН):</strong>
-                 <ul>
-                    <li>Необходимая минимальная площадь кабинета (для группы ${Sgr_target} чел.): <strong>${Required_Area.toFixed(1)}</strong> кв.м.</li>
-                    <li>Минимально необходимое количество учебных кабинетов: <strong>${Required_Classrooms_min}</strong> (при загрузке ${hours_per_day_target} ч/день).</li>
-                 </ul>
-                 
-                 <strong>2. ПРАКТИКА (Автопарк и Персонал):</strong>
-                 <ul>
-                    <li>Минимально необходимое количество рабочих ТС: <strong>${Required_Working_TS}</strong> ед.</li>
-                    <li>Общее количество ТС (включая 1 резервное, при работе ${t_ts_target.toFixed(1)} ч/день): <strong>${Final_Required_TS}</strong> ед. 
-                        <span class="nav-link" onclick="scrollToElement('calc_vehicle_total')" style="color:#007bff; text-decoration: underline;">→ Проверить расчет ТС по формуле</span>
-                    </li>
-                    <li class="instructor-count-style">Общее количество инструкторов: <strong>${Required_Instructors_min}</strong> чел.</li>
-                 </ul>
-                 <span class="note">Расчет ТС произведен по часам вождения, указанным в плане (${T_total_target} ч).</span>
-                 `;
-            
-            // Обновляем высоту аккордеона после вывода результатов
-            const accordionContent = document.getElementById('calc_reverse').closest('.accordion-content');
-            if (accordionContent) {
-                accordionContent.style.maxHeight = accordionContent.scrollHeight + 40 + 'px';
-            }
-        }
-
-        // --- 2. Калькулятор: ОГРАНИЧЕНИЕ ПО САНПИН ---
-        function calculateSanPinLimit() {
-            const Area = parseFloat(document.getElementById('Area_sanpin').value);
-            
-            if (Area <= 0) {
-                document.getElementById('result_sanpin').innerHTML = "Ошибка: Площадь должна быть больше нуля.";
-                return;
-            }
-
-            const maxGroupSize = Math.floor(Area / SANPIN_NORM);
-
-            document.getElementById('result_sanpin').innerHTML = 
-                `<p class="main-result">Максимально допустимый размер группы по СанПиН: <strong>${maxGroupSize}</strong> человек.</p>`;
-                 
-            document.getElementById('Sgr_final').setAttribute('max', maxGroupSize);
-            document.getElementById('Sgr_final').setAttribute('title', `Не более ${maxGroupSize} чел. по СанПиН`);
-        }
-        
-        // --- 3. Калькулятор: РЕАЛЬНАЯ МАКСИМАЛЬНАЯ ПРОПУСКНАЯ СПОСОБНОСТЬ ---
-        function calculateFinalLimit() {
-            const Area_sanpin = parseFloat(document.getElementById('Area_sanpin').value);
-            const SanPin_Limit = Math.floor(Area_sanpin / SANPIN_NORM);
-
-            // 1. Практическая мощность
-            const Ntc = parseFloat(document.getElementById('Ntc_final').value);
-            const t = getDailyWorkHours('instructors_final');
-            const T = parseFloat(document.getElementById('T_final').value);
-            
-            if (T <= 0 || Ntc < 1 || t <= 0) {
-                 document.getElementById('result_final_limit').innerHTML = "Ошибка: Проверьте параметры Т, Количество ТС (>=1) и Инструкторов (>0) для практики.";
-                 return;
-            }
-            
-            const working_vehicles = Ntc - 1;
-            const K_Practical = Math.floor((working_vehicles * t * ANNUAL_MULTIPLIER) / T);
+        // --- Функция для обновления пояснения (НОВЫЙ ХЕЛПЕР) ---
+        function updateNote(note_id, instructors_value) {
+            const hours = parseInt(instructors_value) * STANDARD_SHIFT_HOURS;
+            const noteElement = document.getElementById(note_id);
+            if (noteElement) {
+                noteElement.innerHTML = `**Пояснение:** При ${instructors_value} инструкторах, расчетное время работы ТС в день - ${hours.toFixed(1)} часа (${instructors_value} * 7.2 часа).`;
+            }
+        }
+        
+        // --- Функция для Аккордеона ---
+        function toggleAccordion(header) {
+            const item = header.parentNode;
+            const content = header.nextElementSibling;
+            
+            if (item.classList.contains('active')) {
+                item.classList.remove('active');
+                content.style.maxHeight = '0';
+            } else {
+                document.querySelectorAll('.accordion-item.active').forEach(openItem => {
+                    openItem.classList.remove('active');
+                    openItem.querySelector('.accordion-content').style.maxHeight = '0';
+                });
+                
+                item.classList.add('active');
+                content.style.maxHeight = content.scrollHeight + 40 + 'px'; 
+            }
+        }
+        
+        // --- Функция для Скролла (Навигации) ---
+        function scrollToElement(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                // Убедимся, что аккордеон, содержащий элемент, открыт
+                let currentItem = element.closest('.accordion-item');
+                if (currentItem && !currentItem.classList.contains('active')) {
+                    toggleAccordion(currentItem.querySelector('.accordion-header'));
+                }
+                
+                // Прокрутка с учетом отступа
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
 
 
-            // 2. Теоретическая мощность
-            const hours_per_day = parseFloat(document.getElementById('hours_per_day_final').value);
-            const Pi = parseFloat(document.getElementById('Pi_final').value);
-            const Pgr = parseFloat(document.getElementById('Pgr_final').value);
-            const Sgr_Planned = parseFloat(document.getElementById('Sgr_final').value); 
-            
-            const Fpom = hours_per_day * ANNUAL_MULTIPLIER; 
+        // --- 1. Калькулятор: Расчет необходимых ресурсов для Плана (От Обратного) ---
+        function calculateReverse() {
+            const K_target = parseFloat(document.getElementById('K_target').value);
+            const Sgr_target = parseFloat(document.getElementById('Sgr_target').value);
+            const T_total_target = parseFloat(document.getElementById('T_total_target').value);
+            const Pgr_target = parseFloat(document.getElementById('Pgr_target').value);
+            const t_ts_target = getDailyWorkHours('instructors_target');
+            const hours_per_day_target = parseFloat(document.getElementById('hours_per_day_target').value);
 
-            if (Pgr <= 0 || Sgr_Planned <= 0 || Fpom <= 0 || Pi <= 0) {
-                 document.getElementById('result_final_limit').innerHTML = "Ошибка: Проверьте параметры Курса (Pгр), Количества кабинетов, Планируемого размера группы (должны быть > 0), и часы в день.";
-                 return;
-            }
-            
-            const Sgr_Actual = Math.min(Sgr_Planned, SanPin_Limit);
-            const n_MaxGroups = Math.floor((CLASSROOM_LOAD_FACTOR * Fpom * Pi) / Pgr);
-            const K_Theoretical = n_MaxGroups * Sgr_Actual;
-            
-            // 3. Определение лимита
-            const K_FinalLimit = Math.min(K_Practical, K_Theoretical);
-            
-            let bottleneck_message = "";
-            let sanitation_note = "";
-            
-            if (Sgr_Planned > SanPin_Limit) {
-                 sanitation_note = `<span style="color:#dc3545; font-weight: bold;">⚠️ ВАЖНО: Планируемый размер группы (${Sgr_Planned} чел.) превышает лимит по СанПиН (${SanPin_Limit} чел.). Расчет теоретической мощности ведется по лимиту СанПиН.</span><br><br>`;
-            }
-            
-            if (K_Practical < K_Theoretical) {
-                bottleneck_message = `Лимитирующий фактор: <strong>ПРАКТИЧЕСКОЕ ОБУЧЕНИЕ (АВТОПАРК)</strong>.`;
-            } else if (K_Theoretical < K_Practical) {
-                bottleneck_message = `Лимитирующий фактор: <strong>ТЕОРЕТИЧЕСКОЕ ОБУЧЕНИЕ (КЛАССЫ/САНПИН)</strong>.`;
-            } else {
-                bottleneck_message = `Идеальный баланс!`;
-            }
+            if (K_target <= 0 || Sgr_target <= 0 || Pgr_target <= 0 || t_ts_target <= 0 || hours_per_day_target <= 0 || T_total_target <= 0) {
+                 document.getElementById('result_reverse').innerHTML = "Ошибка: Все параметры должны быть больше нуля.";
+                 return;
+            }
+
+            // 1. Необходимая площадь кабинета (по СанПиН)
+            const Required_Area = Sgr_target * SANPIN_NORM;
+
+            // 2. Необходимое количество групп (n)
+            const Required_Groups = Math.ceil(K_target / Sgr_target);
+
+            // 3. Необходимое количество кабинетов (П)
+            const Fpom_target = hours_per_day_target * ANNUAL_MULTIPLIER;
+            const Required_Classrooms_raw = (Pgr_target * Required_Groups) / (CLASSROOM_LOAD_FACTOR * Fpom_target);
+            const Required_Classrooms_min = Math.ceil(Required_Classrooms_raw);
+
+            // 4. Необходимое количество ТС (Практика)
+            const Annual_TS_Hours = t_ts_target * ANNUAL_MULTIPLIER;
+            const Required_Working_TS_raw = (T_total_target * K_target) / Annual_TS_Hours;
+            const Required_Working_TS = Math.ceil(Required_Working_TS_raw);
+            const Final_Required_TS = Required_Working_TS + 1; // + 1 резерв
+            
+            // 5. Необходимое количество Инструкторов
+            const Instructor_Working_Hours_Per_Year = STANDARD_SHIFT_HOURS * ANNUAL_MULTIPLIER; // 7.2 * 294
+            const Total_Instructor_Hours = T_total_target * K_target;
+            const Required_Instructors_raw = Total_Instructor_Hours / Instructor_Working_Hours_Per_Year;
+            const Required_Instructors_min = Math.ceil(Required_Instructors_raw);
+
+            // 6. Формирование результата с чистым HTML
+            document.getElementById('result_reverse').innerHTML = 
+                `<h4>ДЛЯ ${K_target} ОБУЧАЮЩИХСЯ В ГОД ВАМ НЕОБХОДИМО:</h4>
+                 
+                 <strong>1. ТЕОРИЯ (Классы и СанПиН):</strong>
+                 <ul>
+                    <li>Необходимая минимальная площадь кабинета (для группы ${Sgr_target} чел.): <strong>${Required_Area.toFixed(1)}</strong> кв.м.</li>
+                    <li>Минимально необходимое количество учебных кабинетов: <strong>${Required_Classrooms_min}</strong> (при загрузке ${hours_per_day_target} ч/день).</li>
+                 </ul>
+                 
+                 <strong>2. ПРАКТИКА (Автопарк и Персонал):</strong>
+                 <ul>
+                    <li>Минимально необходимое количество рабочих ТС: <strong>${Required_Working_TS}</strong> ед.</li>
+                    <li>Общее количество ТС (включая 1 резервное, при работе ${t_ts_target.toFixed(1)} ч/день): <strong>${Final_Required_TS}</strong> ед. 
+                        <span class="nav-link" onclick="scrollToElement('calc_vehicle_total')" style="color:#007bff; text-decoration: underline;">→ Проверить расчет ТС по формуле</span>
+                    </li>
+                    <li class="instructor-count-style">Общее количество инструкторов: <strong>${Required_Instructors_min}</strong> чел.</li>
+                 </ul>
+                 <span class="note">Расчет ТС произведен по часам вождения, указанным в плане (${T_total_target} ч).</span>
+                 `;
+            
+            // Обновляем высоту аккордеона после вывода результатов
+            const accordionContent = document.getElementById('calc_reverse').closest('.accordion-content');
+            if (accordionContent) {
+                accordionContent.style.maxHeight = accordionContent.scrollHeight + 40 + 'px';
+            }
+        }
+
+        // --- 2. Калькулятор: ОГРАНИЧЕНИЕ ПО САНПИН ---
+        function calculateSanPinLimit() {
+            const Area = parseFloat(document.getElementById('Area_sanpin').value);
+            
+            if (Area <= 0) {
+                document.getElementById('result_sanpin').innerHTML = "Ошибка: Площадь должна быть больше нуля.";
+                return;
+            }
+
+            const maxGroupSize = Math.floor(Area / SANPIN_NORM);
+
+            document.getElementById('result_sanpin').innerHTML = 
+                `<p class="main-result">Максимально допустимый размер группы по СанПиН: <strong>${maxGroupSize}</strong> человек.</p>`;
+                 
+            document.getElementById('Sgr_final').setAttribute('max', maxGroupSize);
+            document.getElementById('Sgr_final').setAttribute('title', `Не более ${maxGroupSize} чел. по СанПиН`);
+
+            // ИСПРАВЛЕНИЕ: Обновляем высоту аккордеона после вывода результатов
+            const accordionContent = document.getElementById('calc_sanpin').closest('.accordion-content');
+            if (accordionContent) {
+                accordionContent.style.maxHeight = accordionContent.scrollHeight + 40 + 'px';
+            }
+        }
+        
+        // --- 3. Калькулятор: РЕАЛЬНАЯ МАКСИМАЛЬНАЯ ПРОПУСКНАЯ СПОСОБНОСТЬ ---
+        function calculateFinalLimit() {
+            const Area_sanpin = parseFloat(document.getElementById('Area_sanpin').value);
+            const SanPin_Limit = Math.floor(Area_sanpin / SANPIN_NORM);
+
+            // 1. Практическая мощность
+            const Ntc = parseFloat(document.getElementById('Ntc_final').value);
+            const t = getDailyWorkHours('instructors_final');
+            const T = parseFloat(document.getElementById('T_final').value);
+            
+            if (T <= 0 || Ntc < 1 || t <= 0) {
+                 document.getElementById('result_final_limit').innerHTML = "Ошибка: Проверьте параметры Т, Количество ТС (>=1) и Инструкторов (>0) для практики.";
+                 return;
+            }
+            
+            const working_vehicles = Ntc - 1;
+            const K_Practical = Math.floor((working_vehicles * t * ANNUAL_MULTIPLIER) / T);
 
 
-            document.getElementById('result_final_limit').innerHTML = 
-                `<h4>РЕЗУЛЬТАТЫ СРАВНЕНИЯ:</h4>
-                 ${sanitation_note}
-                 <ul>
-                    <li>Максимальная ПРАКТИЧЕСКАЯ мощность (по ТС, при ${t.toFixed(1)} ч/день): <strong>${K_Practical}</strong> чел.</li>
-                    <li>Максимальная ТЕОРЕТИЧЕСКАЯ мощность (по классам): <strong>${K_Theoretical}</strong> чел. (Факт. группа: ${Sgr_Actual} чел.)</li>
-                 </ul>
-                 
-                 <p class="main-result">РЕАЛЬНАЯ МАКСИМАЛЬНАЯ ПРОПУСКНАЯ СПОСОБНОСТЬ В ГОД: <strong>${K_FinalLimit}</strong> человек.</p>
-                 <p style="margin-top: 15px;">${bottleneck_message}</p>`;
-        }
-        
-        // --- 4. Калькулятор: Максимальная ТЕОРЕТИЧЕСКАЯ мощность (групп) ---
-        function calculateGroups() {
-            const hours_per_day = parseFloat(document.getElementById('hours_per_day_groups').value);
-            const Pi = parseFloat(document.getElementById('Pi_groups').value);
-            const Pgr = parseFloat(document.getElementById('Pgr_groups').value);
-            
-            const Fpom = hours_per_day * ANNUAL_MULTIPLIER; 
+            // 2. Теоретическая мощность
+            const hours_per_day = parseFloat(document.getElementById('hours_per_day_final').value);
+            const Pi = parseFloat(document.getElementById('Pi_final').value);
+            const Pgr = parseFloat(document.getElementById('Pgr_final').value);
+            const Sgr_Planned = parseFloat(document.getElementById('Sgr_final').value); 
+            
+            const Fpom = hours_per_day * ANNUAL_MULTIPLIER; 
 
-            if (Pgr <= 0 || Fpom <= 0 || Pi <= 0) {
-                document.getElementById('result_groups').innerHTML = "Ошибка: Проверьте параметры (должны быть > 0).";
-                return;
-            }
+            if (Pgr <= 0 || Sgr_Planned <= 0 || Fpom <= 0 || Pi <= 0) {
+                 document.getElementById('result_final_limit').innerHTML = "Ошибка: Проверьте параметры Курса (Pгр), Количества кабинетов, Планируемого размера группы (должны быть > 0), и часы в день.";
+                 return;
+            }
+            
+            const Sgr_Actual = Math.min(Sgr_Planned, SanPin_Limit);
+            const n_MaxGroups = Math.floor((CLASSROOM_LOAD_FACTOR * Fpom * Pi) / Pgr);
+            const K_Theoretical = n_MaxGroups * Sgr_Actual;
+            
+            // 3. Определение лимита
+            const K_FinalLimit = Math.min(K_Practical, K_Theoretical);
+            
+            let bottleneck_message = "";
+            let sanitation_note = "";
+            
+            if (Sgr_Planned > SanPin_Limit) {
+                 sanitation_note = `<span style="color:#dc3545; font-weight: bold;">⚠️ ВАЖНО: Планируемый размер группы (${Sgr_Planned} чел.) превышает лимит по СанПиН (${SanPin_Limit} чел.). Расчет теоретической мощности ведется по лимиту СанПиН.</span><br><br>`;
+            }
+            
+            if (K_Practical < K_Theoretical) {
+                bottleneck_message = `Лимитирующий фактор: <strong>ПРАКТИЧЕСКОЕ ОБУЧЕНИЕ (АВТОПАРК)</strong>.`;
+            } else if (K_Theoretical < K_Practical) {
+                bottleneck_message = `Лимитирующий фактор: <strong>ТЕОРЕТИЧЕСКОЕ ОБУЧЕНИЕ (КЛАССЫ/САНПИН)</strong>.`;
+            } else {
+                bottleneck_message = `Идеальный баланс!`;
+            }
 
-            const resultValue = (CLASSROOM_LOAD_FACTOR * Fpom * Pi) / Pgr;
 
-            document.getElementById('result_groups').innerHTML = 
-                `<p class="main-result">Максимальное количество учебных групп в год (по кабинетам): <strong>${Math.floor(resultValue)}</strong> групп.</p>`;
-        }
+            document.getElementById('result_final_limit').innerHTML = 
+                `<h4>РЕЗУЛЬТАТЫ СРАВНЕНИЯ:</h4>
+                 ${sanitation_note}
+                 <ul>
+                    <li>Максимальная ПРАКТИЧЕСКАЯ мощность (по ТС, при ${t.toFixed(1)} ч/день): <strong>${K_Practical}</strong> чел.</li>
+                    <li>Максимальная ТЕОРЕТИЧЕСКАЯ мощность (по классам): <strong>${K_Theoretical}</strong> чел. (Факт. группа: ${Sgr_Actual} чел.)</li>
+                 </ul>
+                 
+                 <p class="main-result">РЕАЛЬНАЯ МАКСИМАЛЬНАЯ ПРОПУСКНАЯ СПОСОБНОСТЬ В ГОД: <strong>${K_FinalLimit}</strong> человек.</p>
+                 <p style="margin-top: 15px;">${bottleneck_message}</p>`;
 
-        // --- 5. Калькулятор: Общее число учебных кабинетов (потребность) ---
-        function calculateClassrooms() {
-            const Pgr = parseFloat(document.getElementById('Pgr_rooms').value);
-            const n = parseFloat(document.getElementById('n_rooms').value);
-            const hours_per_day = parseFloat(document.getElementById('hours_per_day_rooms').value);
-            
-            const Fpom = hours_per_day * ANNUAL_MULTIPLIER; 
-            const denominator = CLASSROOM_LOAD_FACTOR * Fpom;
+            // ИСПРАВЛЕНИЕ: Обновляем высоту аккордеона после вывода результатов
+            const accordionContent = document.getElementById('calc_final_limit').closest('.accordion-content');
+            if (accordionContent) {
+                accordionContent.style.maxHeight = accordionContent.scrollHeight + 40 + 'px';
+            }
+        }
+        
+        // --- 4. Калькулятор: Максимальная ТЕОРЕТИЧЕСКАЯ мощность (групп)
+        function calculateGroups() {
+            const hours_per_day = parseFloat(document.getElementById('hours_per_day_groups').value);
+            const Pi = parseFloat(document.getElementById('Pi_groups').value);
+            const Pgr = parseFloat(document.getElementById('Pgr_groups').value);
 
-            if (denominator <= 0 || Pgr <= 0 || n <= 0) {
-                document.getElementById('result_classrooms').innerHTML = "Ошибка: Проверьте параметры (должны быть > 0).";
-                return;
-            }
+            if (Pgr <= 0 || hours_per_day <= 0 || Pi <= 0) {
+                document.getElementById('result_groups').innerHTML = "Ошибка: Все параметры должны быть больше нуля.";
+                return;
+            }
 
-            const resultValue = (Pgr * n) / denominator;
-            
-            document.getElementById('result_classrooms').innerHTML = 
-                `<p class="main-result">Для теоретического обучения требуется: <strong>${Math.ceil(resultValue)}</strong> учебных кабинетов.</p>`;
-        }
+            const Fpom = hours_per_day * ANNUAL_MULTIPLIER;
+            const n_MaxGroups_raw = (CLASSROOM_LOAD_FACTOR * Fpom * Pi) / Pgr;
+            const n_MaxGroups = Math.floor(n_MaxGroups_raw);
 
-        // --- 6. Калькулятор: Максимальная ПРАКТИЧЕСКАЯ мощность ---
-        function calculateStudents() {
-            const Ntc = parseFloat(document.getElementById('Ntc_students').value);
-            const t = getDailyWorkHours('instructors_students');
-            const T = parseFloat(document.getElementById('T_students').value);
-            
-            if (T <= 0 || Ntc < 1 || t <= 0) {
-                document.getElementById('result_students').innerHTML = "Ошибка: Проверьте значения Т, Количество ТС (>=1) и Инструкторов (>0).";
-                return;
-            }
+            document.getElementById('result_groups').innerHTML = 
+                `<h4>РЕЗУЛЬТАТЫ:</h4>
+                 <p class="main-result">Максимальное количество групп, которое может быть выпущено в год: <strong>${n_MaxGroups}</strong> групп.</p>
+                 <p>
+                    <em>Для справки:</em> Вы могли бы провести ${n_MaxGroups_raw.toFixed(1)} курсов, но берем целое число.
+                 </p>
+                 <span class="note">Коэффициент загрузки класса 75% учтен.</span>`;
+            
+            // ИСПРАВЛЕНИЕ: Обновляем высоту аккордеона после вывода результатов
+            const accordionContent = document.getElementById('calc_groups').closest('.accordion-content');
+            if (accordionContent) {
+                accordionContent.style.maxHeight = accordionContent.scrollHeight + 40 + 'px';
+            }
+        }
 
-            const working_vehicles = Ntc - 1;
-            const resultValue = (working_vehicles * t * ANNUAL_MULTIPLIER) / T;
-            
-            document.getElementById('result_students').innerHTML = 
-                `<p class="main-result">Максимальное количество обучающихся в год (по автопарку, при ${t.toFixed(1)} ч/день): <strong>${Math.floor(resultValue)}</strong> человек.</p>`;
-        }
-        
-        // --- 7. Калькулятор: Общее количество необходимых ТС ---
-        function calculateVehicleTotal() {
-            const T = parseFloat(document.getElementById('T_total').value);
-            const K = parseFloat(document.getElementById('K_total').value);
-            const t = getDailyWorkHours('instructors_total');
-            const denominator = t * ANNUAL_MULTIPLIER;
+        // --- 5. Калькулятор: Потребность в учебных кабинетах
+        function calculateClassrooms() {
+            const Pgr = parseFloat(document.getElementById('Pgr_rooms').value);
+            const n = parseFloat(document.getElementById('n_rooms').value);
+            const hours_per_day = parseFloat(document.getElementById('hours_per_day_rooms').value);
 
-            if (denominator <= 0 || T <= 0 || K <= 0) {
-                document.getElementById('result_vehicle_total').innerHTML = "Ошибка: Все параметры должны быть больше нуля.";
-                return;
-            }
+            if (Pgr <= 0 || n <= 0 || hours_per_day <= 0) {
+                document.getElementById('result_classrooms').innerHTML = "Ошибка: Все параметры должны быть больше нуля.";
+                return;
+            }
 
-            const resultValue = (T * K / denominator);
-            const finalResult = Math.ceil(resultValue) + 1; 
-            
-            document.getElementById('result_vehicle_total').innerHTML = 
-                `Необходимое количество *рабочих* ТС: <strong>${Math.ceil(resultValue)}</strong> ед. ( ${Math.round(resultValue * 100) / 100} расчетное).<br>
-                 Общее количество необходимых транспортных средств (с учетом 1 резервного ТС, при ${t.toFixed(1)} ч/день): <strong>${finalResult}</strong>.`;
-        }
+            const Fpom = hours_per_day * ANNUAL_MULTIPLIER;
+            const Required_Classrooms_raw = (Pgr * n) / (CLASSROOM_LOAD_FACTOR * Fpom);
+            const Required_Classrooms_min = Math.ceil(Required_Classrooms_raw);
 
-        // Инициализация
-        window.onload = function() {
-            calculateSanPinLimit();
-            
-            // Инициализация пояснений для всех селектов
-            updateNote('note_target', document.getElementById('instructors_target').value);
-            updateNote('note_final', document.getElementById('instructors_final').value);
-            updateNote('note_students', document.getElementById('instructors_students').value);
-            updateNote('note_total', document.getElementById('instructors_total').value);
-            
-            // Инициализация высоты для первого (активного) аккордеона
-            const firstContent = document.querySelector('.accordion-item.active .accordion-content');
-            if (firstContent) {
-                firstContent.style.maxHeight = firstContent.scrollHeight + 40 + 'px';
-            }
-        };
+            document.getElementById('result_classrooms').innerHTML = 
+                `<h4>РЕЗУЛЬТАТЫ:</h4>
+                 <p class="main-result">Минимально необходимое количество учебных кабинетов: <strong>${Required_Classrooms_min}</strong> ед.</p>
+                 <p>
+                    <em>Для справки:</em> Расчетное число кабинетов: ${Required_Classrooms_raw.toFixed(2)}.
+                 </p>
+                 <span class="note">Для набора ${n} групп в год.</span>`;
+            
+            // ИСПРАВЛЕНИЕ: Обновляем высоту аккордеона после вывода результатов
+            const accordionContent = document.getElementById('calc_classrooms').closest('.accordion-content');
+            if (accordionContent) {
+                accordionContent.style.maxHeight = accordionContent.scrollHeight + 40 + 'px';
+            }
+        }
 
-    </script>
+        // --- 6. Калькулятор: Кол-во квот по кол-ву автомобилей
+        function calculateStudents() {
+            const Ntc = parseFloat(document.getElementById('Ntc_students').value);
+            const t_students = getDailyWorkHours('instructors_students');
+            const T = parseFloat(document.getElementById('T_students').value);
+
+            if (T <= 0 || Ntc < 1 || t_students <= 0) {
+                document.getElementById('result_students').innerHTML = "Ошибка: Проверьте параметры Т, Количество ТС (>=1) и Инструкторов (>0).";
+                return;
+            }
+            
+            const working_vehicles = Ntc - 1;
+            const K_Max = Math.floor((working_vehicles * t_students * ANNUAL_MULTIPLIER) / T);
+
+            document.getElementById('result_students').innerHTML = 
+                `<h4>МАКСИМАЛЬНОЕ КОЛИЧЕСТВО КУРСАНТОВ:</h4>
+                 <p class="main-result">Максимальная пропускная способность автопарка: <strong>${K_Max}</strong> человек в год.</p>
+                 <ul>
+                    <li>Используется ${working_vehicles} рабочих ТС (из ${Ntc} общих).</li>
+                 </ul>
+                 <span class="note">При работе ТС ${t_students.toFixed(1)} часов в день.</span>`;
+            
+            // ИСПРАВЛЕНИЕ: Обновляем высоту аккордеона после вывода результатов
+            const accordionContent = document.getElementById('calc_students').closest('.accordion-content');
+            if (accordionContent) {
+                accordionContent.style.maxHeight = accordionContent.scrollHeight + 40 + 'px';
+            }
+        }
+        
+        // --- 7. Калькулятор: Необходимое общее кол-во автомобилей
+        function calculateVehicleTotal() {
+            const T = parseFloat(document.getElementById('T_total').value);
+            const K = parseFloat(document.getElementById('K_total').value);
+            const t_total = getDailyWorkHours('instructors_total');
+
+            if (T <= 0 || K <= 0 || t_total <= 0) {
+                document.getElementById('result_vehicle_total').innerHTML = "Ошибка: Все параметры должны быть больше нуля.";
+                return;
+            }
+
+            const Annual_TS_Hours = t_total * ANNUAL_MULTIPLIER;
+            const Required_Working_TS_raw = (T * K) / Annual_TS_Hours;
+            const Required_Working_TS = Math.ceil(Required_Working_TS_raw);
+            const Final_Required_TS = Required_Working_TS + 1; // + 1 резерв
+
+            document.getElementById('result_vehicle_total').innerHTML = 
+                `<h4>НЕОБХОДИМОЕ КОЛИЧЕСТВО АВТОМОБИЛЕЙ:</h4>
+                 <p class="main-result">Общее количество учебных ТС (с учетом 1 резервного): <strong>${Final_Required_TS}</strong> ед.</p>
+                 <ul>
+                    <li>Расчетное количество рабочих ТС: ${Required_Working_TS_raw.toFixed(2)}.</li>
+                    <li>Требуемое количество рабочих ТС (округлено вверх): <strong>${Required_Working_TS}</strong> ед.</li>
+                 </ul>
+                 <span class="note">Рабочих ТС: ${Required_Working_TS} ед.</span>`;
+            
+            // ИСПРАВЛЕНИЕ: Обновляем высоту аккордеона после вывода результатов
+            const accordionContent = document.getElementById('calc_vehicle_total').closest('.accordion-content');
+            if (accordionContent) {
+                accordionContent.style.maxHeight = accordionContent.scrollHeight + 40 + 'px';
+            }
+        }
+    </script>
 
 </body>
 </html>
